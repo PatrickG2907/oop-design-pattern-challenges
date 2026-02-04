@@ -1,4 +1,4 @@
-# 🏗️ Structural OOP Patterns Challenges
+# 🧩 Structural OOP Patterns Challenges
 
 Welcome to the **Structural OOP Patterns Challenges** repository! 🎉  
 
