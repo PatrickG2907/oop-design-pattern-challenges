@@ -108,4 +108,4 @@ You are designing a **game character system**. Each character has:
 
 1. Clone the repository:  
 ```bash
-git clone https://github.com/your-username/creational-oop-patterns.git
+git clone https://github.com/PatrickG2907/oop-design-pattern-challenges.git
