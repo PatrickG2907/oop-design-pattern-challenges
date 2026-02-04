@@ -1,6 +1,8 @@
-# OOP Patterns Challenges
+# 🏗️ Structural OOP Patterns Challenges
 
-This repository contains a collection of **self-designed challenges** focused on **structural and behavioral Object-Oriented Programming (OOP) patterns**. Each challenge provides a practical scenario, tasks to implement, and an optional twist to extend the complexity. These challenges are ideal for learning, practicing, and mastering OOP patterns in real-world scenarios.
+Welcome to the **Structural OOP Patterns Challenges** repository! 🎉  
+
+This repository contains a set of self-designed programming challenges focused on **Structural Design Patterns** in Object-Oriented Programming (OOP). These exercises will help you understand and implement structural patterns in a structured and flexible way. 
 
 ---
 
