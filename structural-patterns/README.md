@@ -119,9 +119,10 @@ Add **access control**: only users with a `"premium"` role can view high-resolut
 
 ---
 
-## How to Use
+## 🚀 Getting Started
 
-1. Clone the repository:
+1. Clone the repository:  
 ```bash
-git clone https://github.com/your-username/oop-patterns-challenges.git
+git clone https://github.com/PatrickG2907/oop-design-pattern-challenges/structural-patterns.git
+
 
