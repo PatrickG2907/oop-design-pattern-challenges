@@ -17,7 +17,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## Adapter Pattern
+## 1️⃣ Adapter Pattern
 
 **Scenario:**  
 Integrate a new payment gateway into an existing e-commerce platform. The platform expects a `pay(amount)` method, but the gateway only provides `make_payment(total)`.
