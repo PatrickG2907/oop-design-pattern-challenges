@@ -123,6 +123,6 @@ Add **access control**: only users with a `"premium"` role can view high-resolut
 
 1. Clone the repository:  
 ```bash
-git clone https://github.com/PatrickG2907/oop-design-pattern-challenges/structural-patterns.git
+git clone https://github.com/PatrickG2907/oop-design-pattern-challenges.git
 
 
