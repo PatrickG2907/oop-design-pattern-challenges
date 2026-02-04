@@ -31,7 +31,7 @@ The gateway sometimes returns `"OK"` (string) or `True` (boolean) for success. M
 
 ---
 
-## Bridge Pattern
+## 2️⃣ Bridge Pattern
 
 **Scenario:**  
 Separate abstraction from implementation for flexible payment processing. This allows the platform to support multiple payment methods without modifying high-level code.
@@ -46,7 +46,7 @@ Support dynamically swapping payment gateways at runtime without changing client
 
 ---
 
-## Composite Pattern
+## 3️⃣ Composite Pattern
 
 **Scenario:**  
 Model a **file system structure** where both files and folders need to be treated uniformly. A folder can contain files or other folders.
@@ -61,7 +61,7 @@ Add a feature to calculate total size or perform batch operations recursively wi
 
 ---
 
-## Decorator Pattern
+## 4️⃣ Decorator Pattern
 
 **Scenario:**  
 Implement a notification system. The base notification sends an email. Later, SMS and Push notifications are added optionally.
@@ -76,7 +76,7 @@ Implement a decorator that **logs the notification type** every time it is sent,
 
 ---
 
-## Facade Pattern
+## 5️⃣ Facade Pattern
 
 **Scenario:**  
 Create a home automation system with multiple subsystems: `Lights`, `AC`, `Music`. Each subsystem has multiple methods (`on()`, `off()`, `set_temperature()`, `play_song()`).
@@ -90,7 +90,7 @@ Add **Vacation Mode** that schedules lights and AC automatically without exposin
 
 ---
 
-## Flyweight Pattern
+## 6️⃣ Flyweight Pattern
 
 **Scenario:**  
 Develop a text editor that displays thousands of characters. Each character has a font style (bold, italic) and color. Storing each character individually wastes memory.
@@ -105,7 +105,7 @@ Add **dynamic highlighting** for a few characters without creating new style obj
 
 ---
 
-## Proxy Pattern
+## 7️⃣ Proxy Pattern
 
 **Scenario:**  
 Implement a large image viewer. Loading full-resolution images is slow. Display a placeholder first, then load the real image on demand.
