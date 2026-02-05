@@ -86,7 +86,7 @@ Create a home automation system with multiple subsystems: `Lights`, `AC`, `Music
 - Use the Facade to start and end a party.
 
 **Twist:**  
-Add **Vacation Mode** that schedules lights and AC automatically without exposing underlying subsystems.
+Add `vacation_mode()` that schedules lights and AC automatically without exposing underlying subsystems.
 
 ---
 
