@@ -34,15 +34,15 @@ The gateway sometimes returns `"OK"` (string) or `True` (boolean) for success. M
 ## 2️⃣ Bridge Pattern
 
 **Scenario:**  
-Separate abstraction from implementation for flexible payment processing. This allows the platform to support multiple payment methods without modifying high-level code.
+You are designing a drawing application that supports multiple shapes (`Circle`, `Square`) and multiple rendering methods (`Vector`, `Raster`).
 
 **Tasks:**  
-- Implement a Payment abstraction and different gateway implementations.  
-- Connect them via a Bridge so the platform can use multiple gateways interchangeably.  
-- Test payments through multiple implementations.
+- Implement a Bridge so shapes can work with any renderer.
+- Draw at least two shapes with both renderers.
 
-**Twist:**  
-Support dynamically swapping payment gateways at runtime without changing client code.
+**Twists:**  
+- Add a third renderer (`ASCII` art for terminal output) without modifying the existing shape classes.
+- Add a third shape (`Triangle`) without modifying the existing render classes.
 
 ---
 
