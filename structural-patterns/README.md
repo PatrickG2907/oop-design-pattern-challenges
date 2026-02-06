@@ -108,14 +108,18 @@ Add **dynamic highlighting** for a few characters without creating new style obj
 ## 7️⃣ Proxy Pattern
 
 **Scenario:**  
-Implement a large image viewer. Loading full-resolution images is slow. Display a placeholder first, then load the real image on demand.
+You are building a digital library system. Loading the full content of books is expensive (e.g., reading from disk or fetching from a remote server). To optimize performance, you want to use a Proxy to represent books without immediately loading their content.
 
 **Tasks:**  
-- Implement a Proxy that shows a placeholder initially.  
-- Load the real image only when `display()` is called.
+- Create a `Book` entity that has a title, author, and content. It can provide its full content when requested. 
+- Create a `BookProxy` entity that stands in for a Book.
+  - Initially, the proxy does not load the actual book content.
+  - The proxy only loads the real book the first time someone asks for its content.
+  - After the book is loaded, any future requests for content go directly to the real book without reloading.
+  - When the book is loaded for the first time, the proxy should indicate that it is loading (e.g., by printing a message).
 
 **Twist:**  
-Add **access control**: only users with a `"premium"` role can view high-resolution images; others see a low-resolution version.
+The proxy can enforce access rules: for example, some users (guests) cannot read the book, and attempting to do so should trigger an error.
 
 ---
 
