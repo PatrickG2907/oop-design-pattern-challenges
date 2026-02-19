@@ -3,9 +3,10 @@ from typing import List
 from enum import Enum, auto
 from abc import ABC, abstractmethod
 
-#--------------------------------------
-# Enums and Configuration
-#--------------------------------------
+# --------------------------------------
+# Enums
+# --------------------------------------
+
 class Gender(Enum):
     MALE = auto()
     FEMALE = auto()
@@ -16,15 +17,17 @@ class Profiles(Enum):
     TEEN = auto()
     ADULT = auto()
 
-#--------------------------------------
-# Profile Assigner (Configurable)
-#--------------------------------------
+# --------------------------------------
+# Profile Assigner
+# --------------------------------------
+
 class ProfileAssigner:
     def __init__(self, age_profiles=None):
-        # Default profiles if none provided
-        self.age_profiles = age_profiles or [(0, 13, Profiles.CHILD),
-                                             (14, 17, Profiles.TEEN),
-                                             (18, 99, Profiles.ADULT)]
+        self.age_profiles = age_profiles or [
+            (0, 13, Profiles.CHILD),
+            (13, 18, Profiles.TEEN),
+            (18, 150, Profiles.ADULT),
+        ]
 
     def assign_profile(self, age: int) -> Profiles:
         for min_age, max_age, profile in self.age_profiles:
@@ -32,9 +35,10 @@ class ProfileAssigner:
                 return profile
         raise ValueError(f"No profile defined for age {age}")
 
-#--------------------------------------
-# User Class
-#--------------------------------------
+# --------------------------------------
+# User Entity
+# --------------------------------------
+
 @dataclass
 class User:
     name: str
@@ -49,23 +53,38 @@ class User:
 
     def _validate(self):
         if not self.name:
-            raise ValueError("Name cannot be empty!")
+            raise ValueError("Name cannot be empty")
         if self.age < 0:
-            raise ValueError("Age cannot be negative!")
+            raise ValueError("Age cannot be negative")
 
     def __str__(self):
         return f"{self.name} ({self.profile.name}, {self.gender.name})"
 
-#--------------------------------------
+# --------------------------------------
+# Message Entity
+# --------------------------------------
+
+@dataclass
+class Message:
+    sender: User
+    content: str
+
+# --------------------------------------
 # Notifications (Observer Pattern)
-#--------------------------------------
+# --------------------------------------
+
 class ISystemNotification(ABC):
     @abstractmethod
-    def notify_add_user(self, name: str) -> None: pass
+    def notify_add_user(self, name: str) -> None:
+        pass
+
     @abstractmethod
-    def notify_remove_user(self, name: str) -> None: pass
+    def notify_remove_user(self, name: str) -> None:
+        pass
+
     @abstractmethod
-    def notify_remove_error(self, name: str) -> None: pass
+    def notify_remove_error(self, name: str) -> None:
+        pass
 
 class SystemNotificationPrint(ISystemNotification):
     def notify_add_user(self, name: str) -> None:
@@ -77,217 +96,247 @@ class SystemNotificationPrint(ISystemNotification):
     def notify_remove_error(self, name: str) -> None:
         print(f"[Error] User {name} cannot be removed!")
 
-#--------------------------------------
-# Notifier Interface & Service
-#--------------------------------------
 class INotifier(ABC):
     @abstractmethod
-    def attach(self, observer: ISystemNotification) -> None: pass
+    def attach(self, observer: ISystemNotification) -> None:
+        pass
+
     @abstractmethod
-    def notify_add(self, user: User) -> None: pass
+    def notify_add(self, user: User) -> None:
+        pass
+
     @abstractmethod
-    def notify_remove(self, user: User) -> None: pass
+    def notify_remove(self, user: User) -> None:
+        pass
+
     @abstractmethod
-    def notify_remove_error(self, user: User) -> None: pass
+    def notify_remove_error(self, user: User) -> None:
+        pass
 
 class NotifierService(INotifier):
     def __init__(self):
-        self.observers: List[ISystemNotification] = []
+        self._observers: List[ISystemNotification] = []
 
     def attach(self, observer: ISystemNotification):
-        self.observers.append(observer)
+        self._observers.append(observer)
 
     def notify_add(self, user: User):
-        for obs in self.observers:
+        for obs in self._observers:
             obs.notify_add_user(user.name)
 
     def notify_remove(self, user: User):
-        for obs in self.observers:
+        for obs in self._observers:
             obs.notify_remove_user(user.name)
 
     def notify_remove_error(self, user: User):
-        for obs in self.observers:
+        for obs in self._observers:
             obs.notify_remove_error(user.name)
 
-#--------------------------------------
+# --------------------------------------
 # User Management
-#--------------------------------------
+# --------------------------------------
+
 class IUserManagement(ABC):
     @abstractmethod
-    def add_user(self, user: User) -> None: pass
+    def add_user(self, user: User) -> None:
+        pass
+
     @abstractmethod
-    def remove_user(self, user: User) -> None: pass
+    def remove_user(self, user: User) -> None:
+        pass
+
     @property
     @abstractmethod
-    def users(self) -> List[User]: pass
+    def users(self):
+        pass
 
 class UserManagementList(IUserManagement):
     def __init__(self, notifier: INotifier):
         self._users: List[User] = []
-        self.notifier = notifier
+        self._notifier = notifier
 
     @property
-    def users(self) -> List[User]:
-        return self._users
+    def users(self):
+        return tuple(self._users)
 
     def add_user(self, user: User) -> None:
         self._users.append(user)
-        self.notifier.notify_add(user)
+        self._notifier.notify_add(user)
 
     def remove_user(self, user: User) -> None:
-        try:
+        if user in self._users:
             self._users.remove(user)
-            self.notifier.notify_remove(user)
-        except ValueError:
-            self.notifier.notify_remove_error(user)
+            self._notifier.notify_remove(user)
+        else:
+            self._notifier.notify_remove_error(user)
 
-#--------------------------------------
-# Recipient Filters
-#--------------------------------------
-class IFilterRecipient(ABC):
-    @abstractmethod
-    def should_block(self, sender: User, receiver: User) -> bool: pass
+# --------------------------------------
+# Message Filtering
+# --------------------------------------
 
-class FilterAge(IFilterRecipient):
-    def __init__(self, allowed_profiles: List[Profiles]):
-        self.allowed_profiles = allowed_profiles
-
-    def should_block(self, sender: User, receiver: User) -> bool:
-        return receiver.profile not in self.allowed_profiles
-
-class FilterGender(IFilterRecipient):
-    def __init__(self, allowed_genders: List[Gender]):
-        self.allowed_genders = allowed_genders
-
-    def should_block(self, sender: User, receiver: User) -> bool:
-        return receiver.gender not in self.allowed_genders
-
-#--------------------------------------
-# Message Filters
-#--------------------------------------
 class IFilterMessage(ABC):
     @abstractmethod
-    def filter_message(self, message: str) -> str: pass
+    def filter(self, message: Message) -> Message:
+        pass
 
 class BannedWordFilter(IFilterMessage):
     def __init__(self, banned_words: List[str]):
-        self.banned_words = set(word.lower() for word in banned_words)
+        self._banned_words = set(w.lower() for w in banned_words)
 
-    def filter_message(self, message: str) -> str:
-        words = message.split()
-        filtered_words = [
-            "***" if word.lower() in self.banned_words else word
-            for word in words
+    def filter(self, message: Message) -> Message:
+        words = message.content.split()
+        filtered = [
+            "***" if w.lower() in self._banned_words else w
+            for w in words
         ]
-        return " ".join(filtered_words)
+        message.content = " ".join(filtered)
+        return message
 
-#--------------------------------------
-# Message Processor & Messenger (Testable)
-#--------------------------------------
+class IMessageProcessor(ABC):
+    @abstractmethod
+    def process(self, message: Message) -> Message:
+        pass
+
+class MessageProcessor(IMessageProcessor):
+    def __init__(self, filters: List[IFilterMessage]):
+        self._filters = filters
+
+    def process(self, message: Message) -> Message:
+        for f in self._filters:
+            message = f.filter(message)
+        return message
+
+# --------------------------------------
+# Recipient Filtering
+# --------------------------------------
+
+class IFilterRecipient(ABC):
+    @abstractmethod
+    def should_block(self, sender: User, receiver: User) -> bool:
+        pass
+
+class FilterAge(IFilterRecipient):
+    def __init__(self, allowed_profiles: List[Profiles]):
+        self._allowed_profiles = allowed_profiles
+
+    def should_block(self, sender: User, receiver: User) -> bool:
+        return receiver.profile not in self._allowed_profiles
+
+class FilterGender(IFilterRecipient):
+    def __init__(self, allowed_genders: List[Gender]):
+        self._allowed_genders = allowed_genders
+
+    def should_block(self, sender: User, receiver: User) -> bool:
+        return receiver.gender not in self._allowed_genders
+
+# --------------------------------------
+# Messaging
+# --------------------------------------
+
 class IMessageOutput(ABC):
     @abstractmethod
-    def send(self, text: str) -> None: pass
+    def send(self, text: str) -> None:
+        pass
 
 class ConsoleOutput(IMessageOutput):
     def send(self, text: str) -> None:
         print(text)
 
-class MessageProcessor:
-    def __init__(self, filters: List[IFilterMessage]):
-        self.filters = filters
+class IMessenger(ABC):
+    @abstractmethod
+    def send(self, message: Message, recipients: List[User]) -> None:
+        pass
 
-    def process(self, message: str) -> str:
-        for f in self.filters:
-            message = f.filter_message(message)
-        return message
+class ConsoleMessenger(IMessenger):
+    def __init__(self,
+                 recipient_filters: List[IFilterRecipient],
+                 output: IMessageOutput):
+        self._recipient_filters = recipient_filters
+        self._output = output
 
-class ConsoleMessenger:
-    def __init__(self, recipient_filters: List[IFilterRecipient], output: IMessageOutput):
-        self.recipient_filters = recipient_filters
-        self.output = output
-
-    def send(self, sender: User, recipients: List[User], message: str):
+    def send(self, message: Message, recipients: List[User]) -> None:
         for receiver in recipients:
-            if receiver == sender:
+            if receiver == message.sender:
                 continue
-            if any(f.should_block(sender, receiver) for f in self.recipient_filters):
+            if any(f.should_block(message.sender, receiver)
+                   for f in self._recipient_filters):
                 continue
-            self.output.send(f"{sender.name} to {receiver.name}: {message}")
+            self._output.send(
+                f"{message.sender.name} → {receiver.name}: {message.content}"
+            )
 
-#--------------------------------------
-# Mediator
-#--------------------------------------
+# --------------------------------------
+# Mediator (High-Level Policy)
+# --------------------------------------
+
 class Mediator(ABC):
     @abstractmethod
-    def add_user(self, user: User) -> None: pass
-    @abstractmethod
-    def remove_user(self, user: User) -> None: pass
-    @abstractmethod
-    def send_message(self, user: User, message: str) -> None: pass
+    def add_user(self, user: User) -> None:
+        pass
 
-#--------------------------------------
-# Chat Room
-#--------------------------------------
+    @abstractmethod
+    def remove_user(self, user: User) -> None:
+        pass
+
+    @abstractmethod
+    def send_message(self, sender: User, content: str) -> None:
+        pass
+
 class ChatRoom(Mediator):
-    def __init__(self, user_management: IUserManagement,
-                 message_processor: MessageProcessor,
-                 messenger: ConsoleMessenger):
-        self.user_management = user_management
-        self.message_processor = message_processor
-        self.messenger = messenger
+    def __init__(self,
+                 user_management: IUserManagement,
+                 message_processor: IMessageProcessor,
+                 messenger: IMessenger):
+        self._user_management = user_management
+        self._message_processor = message_processor
+        self._messenger = messenger
 
     def add_user(self, user: User) -> None:
-        self.user_management.add_user(user)
+        self._user_management.add_user(user)
 
     def remove_user(self, user: User) -> None:
-        self.user_management.remove_user(user)
+        self._user_management.remove_user(user)
 
-    def send_message(self, sender: User, message: str) -> None:
-        if sender not in self.user_management.users:
+    def send_message(self, sender: User, content: str) -> None:
+        if sender not in self._user_management.users:
             print(f"[Error] Sender {sender.name} is not in the chat room!")
             return
-        processed_message = self.message_processor.process(message)
-        self.messenger.send(sender, self.user_management.users, processed_message)
 
-#--------------------------------------
-# Setup Example
-#--------------------------------------
-# Notification
-notifier_service = NotifierService()
-notifier_service.attach(SystemNotificationPrint())
+        message = Message(sender=sender, content=content)
+        processed = self._message_processor.process(message)
+        self._messenger.send(processed, self._user_management.users)
 
-# User Management
-user_mgmt = UserManagementList(notifier_service)
+# --------------------------------------
+# Example Usage
+# --------------------------------------
 
-# Filters
-banned_words_filter = BannedWordFilter(["foo", "bar"])
-age_filter = FilterAge([Profiles.ADULT])
-gender_filter = FilterGender([Gender.FEMALE])
+if __name__ == "__main__":
+    notifier = NotifierService()
+    notifier.attach(SystemNotificationPrint())
 
-# Messaging
-processor = MessageProcessor([banned_words_filter])
-output = ConsoleOutput()
-messenger = ConsoleMessenger([age_filter, gender_filter], output)
+    user_mgmt = UserManagementList(notifier)
 
-# Chat Room
-chat_room = ChatRoom(user_mgmt, processor, messenger)
+    processor: IMessageProcessor = MessageProcessor([
+        BannedWordFilter(["foo", "bar"])
+    ])
 
-# Users with custom profile assigner (optional)
-custom_profiles = [(0, 10, Profiles.CHILD), (11, 17, Profiles.TEEN), (18, 120, Profiles.ADULT)]
-assigner = ProfileAssigner(custom_profiles)
+    messenger: IMessenger = ConsoleMessenger(
+        recipient_filters=[
+            FilterAge([Profiles.ADULT]),
+            FilterGender([Gender.FEMALE])
+        ],
+        output=ConsoleOutput()
+    )
 
-alice = User("Alice", 25, Gender.FEMALE, profile_assigner=assigner)
-bob = User("Bob", 30, Gender.MALE, profile_assigner=assigner)
-charlie = User("Charlie", 12, Gender.MALE, profile_assigner=assigner)
-diana = User("Diana", 28, Gender.FEMALE, profile_assigner=assigner)
+    chat_room = ChatRoom(user_mgmt, processor, messenger)
 
-chat_room.add_user(alice)
-chat_room.add_user(bob)
-chat_room.add_user(charlie)
-chat_room.add_user(diana)
+    alice = User("Alice", 25, Gender.FEMALE)
+    bob = User("Bob", 30, Gender.MALE)
+    diana = User("Diana", 28, Gender.FEMALE)
 
-# Messages
-chat_room.send_message(alice, "Hello everyone! foo should be censored.")
-chat_room.send_message(bob, "Hi Alice, bar is not allowed!")
-chat_room.send_message(charlie, "Hi all, I am a child!")  # Blocked by age filter
-chat_room.send_message(diana, "Hi Alice and Bob!")          # Bob blocked by gender filter
+    chat_room.add_user(alice)
+    chat_room.add_user(bob)
+    chat_room.add_user(diana)
+
+    chat_room.send_message(alice, "Hello foo world!")
+    chat_room.send_message(bob, "Hi bar Alice!")
