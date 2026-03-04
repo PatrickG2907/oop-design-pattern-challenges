@@ -1,4 +1,4 @@
-# Design Patterns Challenges Repository
+# 🔄 Behavioral OOP Patterns Challenges
 
 Welcome to the **Behavioral OOP Patterns Challenges** repository! 🎉  
 
@@ -6,27 +6,38 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
+## Table of Contents
+1. [Strategy Pattern](#strategy-pattern)
+2. [Observer Pattern](#observer-pattern)
+3. [Composite Pattern](#composite-pattern)
+4. [Decorator Pattern](#decorator-pattern)
+5. [Facade Pattern](#facade-pattern)
+6. [Flyweight Pattern](#flyweight-pattern)
+7. [Proxy Pattern](#proxy-pattern)
+
+---
+
+---
+
 ## 1. Strategy Pattern
-**Challenge:**  
-**Description:**  
-- **Scenario:** You are developing an RPG where enemies can behave differently depending on the environment.  
-- **Tasks:**  
-  - Implement an `Enemy` class that can attack using different strategies: `AggressiveAttack`, `DefensiveAttack`, `HitAndRunAttack`.  
-  - The attack strategy can be switched at runtime depending on the enemy’s health or player proximity.  
-  - Each strategy should implement an `execute_attack(player)` method.  
-- **Twist:** Add a special “berserk” mode if health < 20% that temporarily overrides any strategy.  
+
+**Scenario:** You are developing an RPG where enemies can behave differently depending on the environment.  
+**Tasks:**  
+- Implement an `Enemy` class that can attack using different strategies: `AggressiveAttack`, `DefensiveAttack`, `HitAndRunAttack`.  
+- The attack strategy can be switched at runtime depending on the enemy’s health or player proximity.  
+- Each strategy should implement an `execute_attack(player)` method.  
+**Twist:** Add a special “berserk” mode if health < 20% that temporarily overrides any strategy.  
 
 ---
 
 ## 2. Observer Pattern
-**Challenge:**  
-**Description:**  
-- **Scenario:** You are building a weather station system where multiple display devices need updates when the weather changes.  
-- **Tasks:**  
-  - Implement a `WeatherStation` class that holds temperature and humidity.  
-  - Implement `DisplayDevice` classes that subscribe to the WeatherStation and update when weather changes.  
-  - Allow multiple display types (e.g., `PhoneDisplay`, `WindowDisplay`).  
-- **Twist:** Add a priority system. Some displays only get updates if the temperature changes more than 2°C.  
+
+**Scenario:** You are building a weather station system where multiple display devices need updates when the weather changes.  
+**Tasks:**  
+- Implement a `WeatherStation` class that holds temperature and humidity.  
+- Implement `DisplayDevice` classes that subscribe to the WeatherStation and update when weather changes.  
+- Allow multiple display types (e.g., `PhoneDisplay`, `WindowDisplay`).  
+**Twist:** Add a priority system. Some displays only get updates if the temperature changes more than 2°C.  
 
 ---
 
