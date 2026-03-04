@@ -20,7 +20,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 1️⃣ Strategy Pattern
+## 1️⃣ Strategy Pattern <a name="strategy-pattern"></a>
 
 **Scenario:** You are developing an RPG where enemies can behave differently depending on the environment. 
 
