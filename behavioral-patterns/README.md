@@ -1,6 +1,8 @@
 # Design Patterns Challenges Repository
 
-This repository contains hands-on challenges and implementations for common software design patterns. Each challenge includes a real-world scenario, tasks to implement, and a twist to make it more interesting.
+Welcome to the **Behavioral OOP Patterns Challenges** repository! 🎉  
+
+This repository contains a set of self-designed programming challenges focused on **Behavioral Design Patterns** in Object-Oriented Programming (OOP). These exercises will help you understand and implement patterns that deal with object interaction, communication and responsibility distribution in a structured and flexible way at runtime.
 
 ---
 
