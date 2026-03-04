@@ -19,11 +19,13 @@ This repository contains a set of self-designed programming challenges focused o
 
 ## 1. Strategy Pattern
 
-**Scenario:** You are developing an RPG where enemies can behave differently depending on the environment.  
+**Scenario:** You are developing an RPG where enemies can behave differently depending on the environment. 
+
 **Tasks:**  
 - Implement an `Enemy` class that can attack using different strategies: `AggressiveAttack`, `DefensiveAttack`, `HitAndRunAttack`.  
 - The attack strategy can be switched at runtime depending on the enemy’s health or player proximity.  
-- Each strategy should implement an `execute_attack(player)` method.  
+- Each strategy should implement an `execute_attack(player)` method.
+
 **Twist:** Add a special “berserk” mode if health < 20% that temporarily overrides any strategy.  
 
 ---
