@@ -17,7 +17,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 1️⃣ Adapter Pattern
+## 1️⃣ Adapter Pattern <a name="adapter-pattern"></a>
 
 **Scenario:**  
 Integrate a new payment gateway into an existing e-commerce platform. The platform expects a `pay(amount)` method, but the gateway only provides `make_payment(total)`.
@@ -31,7 +31,7 @@ The gateway sometimes returns `"OK"` (string) or `True` (boolean) for success. M
 
 ---
 
-## 2️⃣ Bridge Pattern
+## 2️⃣ Bridge Pattern <a name="bridge-pattern"></a>
 
 **Scenario:**  
 You are designing a drawing application that supports multiple shapes (`Circle`, `Square`) and multiple rendering methods (`Vector`, `Raster`).
@@ -46,7 +46,7 @@ You are designing a drawing application that supports multiple shapes (`Circle`,
 
 ---
 
-## 3️⃣ Composite Pattern
+## 3️⃣ Composite Pattern <a name="composite-pattern"></a>
 
 **Scenario:**  
 Model a **file system structure** where both files and folders need to be treated uniformly. A folder can contain files or other folders.
@@ -61,7 +61,7 @@ Add a feature to calculate total size or perform batch operations recursively wi
 
 ---
 
-## 4️⃣ Decorator Pattern
+## 4️⃣ Decorator Pattern <a name="decorator-pattern"></a>
 
 **Scenario:**  
 Implement a notification system. The base notification sends an email. Later, SMS and Push notifications are added optionally.
@@ -76,7 +76,7 @@ Implement a decorator that **logs the notification type** every time it is sent,
 
 ---
 
-## 5️⃣ Facade Pattern
+## 5️⃣ Facade Pattern <a name="facade-pattern"></a>
 
 **Scenario:**  
 Create a home automation system with multiple subsystems: `Lights`, `AC`, `Music`. Each subsystem has multiple methods (`on()`, `off()`, `set_temperature()`, `play_song()`).
@@ -90,7 +90,7 @@ Add `vacation_mode()` that schedules lights and AC automatically without exposin
 
 ---
 
-## 6️⃣ Flyweight Pattern
+## 6️⃣ Flyweight Pattern <a name="flyweight-pattern"></a>
 
 **Scenario:**  
 Develop a text editor that displays thousands of characters. Each character has a font style (bold, italic) and color. Storing each character individually wastes memory.
@@ -105,7 +105,7 @@ Add **dynamic highlighting** for a few characters without creating new style obj
 
 ---
 
-## 7️⃣ Proxy Pattern
+## 7️⃣ Proxy Pattern <a name="proxy-pattern"></a>
 
 **Scenario:**  
 You are building a digital library system. Loading the full content of books is expensive (e.g., reading from disk or fetching from a remote server). To optimize performance, you want to use a Proxy to represent books without immediately loading their content.
