@@ -13,7 +13,10 @@ This repository contains a set of self-designed programming challenges focused o
 4. [State Pattern](#state-pattern)
 5. [Template Method Pattern](#template-method-pattern)
 6. [Iterator Pattern](#iterator-pattern)
-7. [Proxy Pattern](#proxy-pattern)
+7. [Chain of Responsibility Pattern](#chain-of-responsibility-pattern)
+8. [Mediator Pattern](#mediator-pattern)
+9. [Memento Pattern](#memento-pattern)
+10. [Visitor Pattern](#visitor-pattern)
 
 ---
 
@@ -68,7 +71,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 5️⃣ Template Method
+## 5️⃣ Template Method Pattern
   
 **Scenario:** You are building a quiz system where quizzes have a common flow but different rules for scoring or feedback.  
 
@@ -97,7 +100,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 7️⃣ Chain of Responsibility
+## 7️⃣ Chain of Responsibility Pattern
 
 **Scenario:** A customer support system has multiple support tiers: `Level1`, `Level2`, `Level3`.  
 
