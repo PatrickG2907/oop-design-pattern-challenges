@@ -13,9 +13,6 @@ This repository contains a set of self-designed programming challenges focused o
 - [Abstract Factory Pattern](#abstract-factory-pattern)  
 - [Builder Pattern](#builder-pattern)  
 - [Prototype Pattern](#prototype-pattern)  
-- [Getting Started](#getting-started)  
-- [Contributing](#contributing)  
-- [License](#license)  
 
 ---
 
