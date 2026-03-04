@@ -60,6 +60,10 @@ Each challenge typically includes:
 - **Iterator** – Provide sequential access to elements of a collection.
 - **State** – Allow an object to change its behavior when its internal state changes.
 - **Template Method** – Define the skeleton of an algorithm while allowing subclasses to override specific steps.
+- **Chain of Responsibility** - Pass a request along a chain of handlers until one handles it, decoupling sender and receiver.
+- **Mediator** - Centralize communication between objects, reducing direct dependencies and simplifying interactions.
+- **Memento** - Capture and restore an object’s internal state without exposing its implementation details.
+- **Visitor** - Separate operations from objects, allowing new behaviors to be added without modifying the object classes.
 
 ## Tech Stack 🛠️ <a name="tech-stack"></a>
 - **Language:** Python 3.x 🐍
