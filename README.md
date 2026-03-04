@@ -16,7 +16,7 @@ The focus is on **design and architecture**, not just implementing textbook defi
 - [Contributing](#contributing)
 - [License](#license)
 
-## Overview 🔍
+## Overview 🔍 <a name="overview"></a>
 Design patterns are proven solutions to recurring software design problems. This repository groups challenges into the three classic categories:
 
 - **Creational Patterns** 🏗️ – Object creation and lifecycle management  
@@ -35,16 +35,16 @@ Each challenge typically includes:
 - The **target design pattern(s)** 🎯
 - Optional **extensions** to explore trade-offs and refactoring
 
-## Patterns Covered 🧠
+## Patterns Covered 🧠 <a name="patterns-covered"></a>
 
-### Creational Patterns 🏗️
+### Creational Patterns 🏗️ <a name="creational-patterns"></a>
 - **Singleton** – Ensure a class has only one instance and provide a global access point.
 - **Factory Method** – Define an interface for creating objects while allowing subclasses to decide the implementation.
 - **Abstract Factory** – Create families of related objects without specifying concrete classes.
 - **Builder** – Separate the construction of a complex object from its representation.
 - **Prototype** – Create new objects by cloning existing ones.
 
-### Structural Patterns 🧩
+### Structural Patterns 🧩 <a name="structural-patterns"></a>
 - **Adapter** – Convert the interface of a class into another interface clients expect.
 - **Decorator** – Add responsibilities to objects dynamically.
 - **Facade** – Provide a simplified interface to a complex subsystem.
@@ -53,7 +53,7 @@ Each challenge typically includes:
 - **Bridge** – Decouple an abstraction from its implementation so they can vary independently.
 - **Flyweight** – Use sharing to efficiently support a large number of fine-grained objects.
 
-### Behavioral Patterns 🔄
+### Behavioral Patterns 🔄 <a name="behavioral-patterns"></a>
 - **Observer** – Define a one-to-many dependency between objects.
 - **Strategy** – Define a family of algorithms and make them interchangeable.
 - **Command** – Encapsulate a request as an object.
@@ -61,14 +61,14 @@ Each challenge typically includes:
 - **State** – Allow an object to change its behavior when its internal state changes.
 - **Template Method** – Define the skeleton of an algorithm while allowing subclasses to override specific steps.
 
-## Tech Stack 🛠️
+## Tech Stack 🛠️ <a name="tech-stack"></a>
 - **Language:** Python 3.x 🐍
 - **Style:** Object-Oriented Design
 - **Focus:** Readability, extensibility, and clean architecture
 
 No external frameworks are required unless explicitly stated in a challenge.
 
-## How to Use 🚦
+## How to Use 🚦 <a name="how-to-use"></a>
 1. Navigate to a pattern category (`creational`, `structural`, `behavioral`).
 2. Read the challenge description 📖
 3. Implement a solution in **Python** 🧑‍💻
@@ -77,7 +77,7 @@ No external frameworks are required unless explicitly stated in a challenge.
 
 These challenges are intentionally open-ended—there is no single “correct” solution.
 
-## Contributing 🤝
+## Contributing 🤝 <a name="contributing"></a>
 Contributions are welcome! You can help by:
 - Adding new Python-based challenges ✨
 - Improving problem statements
@@ -90,7 +90,7 @@ To contribute:
 3. Commit your changes
 4. Push and open a Pull Request 🚀
 
-## License 📄
+## License 📄 <a name="license"></a>
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
