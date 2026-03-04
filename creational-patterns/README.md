@@ -19,7 +19,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 1️⃣ Singleton Pattern
+## 1️⃣ Singleton Pattern <a name="singleton-pattern"></a>
 
 **Scenario:**  
 You are building a logging system for a multi-threaded application. Only one logger should exist, and it should keep a list of log messages.  
@@ -35,7 +35,7 @@ You are building a logging system for a multi-threaded application. Only one log
 
 ---
 
-## 2️⃣ Factory Method Pattern
+## 2️⃣ Factory Method Pattern <a name="factory-method-pattern"></a>
 
 **Scenario:**  
 You are designing a notification system that can send messages via **Email** and **Push Notification**.  
@@ -51,7 +51,7 @@ You are designing a notification system that can send messages via **Email** and
 
 ---
 
-## 3️⃣ Abstract Factory Pattern
+## 3️⃣ Abstract Factory Pattern <a name="abstract-factory-pattern"></a>
 
 **Scenario:**  
 You are designing a UI toolkit that supports **Light Mode** and **Dark Mode**. Each mode has **Buttons** and **Checkboxes**.  
@@ -67,7 +67,7 @@ You are designing a UI toolkit that supports **Light Mode** and **Dark Mode**. E
 
 ---
 
-## 4️⃣ Builder Pattern
+## 4️⃣ Builder Pattern <a name="builder-pattern"></a>
 
 **Scenario:**  
 You are building a **custom pizza ordering system** where a pizza can have:  
@@ -85,7 +85,7 @@ You are building a **custom pizza ordering system** where a pizza can have:
 
 ---
 
-## 5️⃣ Prototype Pattern
+## 5️⃣ Prototype Pattern <a name="prototype-pattern"></a>
 
 **Scenario:**  
 You are designing a **game character system**. Each character has:  
