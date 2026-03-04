@@ -33,7 +33,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 2️⃣ Observer Pattern
+## 2️⃣ Observer Pattern <a name="observer-pattern"></a>
 
 **Scenario:** You are building a weather station system where multiple display devices need updates when the weather changes.  
 
@@ -46,7 +46,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 3️⃣ Command Pattern
+## 3️⃣ Command Pattern <a name="command-pattern"></a>
   
 **Scenario:** A robot factory uses commands to perform tasks on an assembly line.  
 
@@ -59,7 +59,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 4️⃣ State Pattern
+## 4️⃣ State Pattern <a name="state-pattern"></a>
  
 **Scenario:** You are designing a media player that can be in states: `Stopped`, `Playing`, `Paused`.  
 
@@ -71,7 +71,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 5️⃣ Template Method Pattern
+## 5️⃣ Template Method Pattern <a name="template-method-pattern"></a>
   
 **Scenario:** You are building a quiz system where quizzes have a common flow but different rules for scoring or feedback.  
 
@@ -87,7 +87,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 6️⃣ Iterator Pattern
+## 6️⃣ Iterator Pattern <a name="iterator-pattern"></a>
 
 **Scenario:** Music Playlist.  
 
@@ -100,7 +100,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 7️⃣ Chain of Responsibility Pattern
+## 7️⃣ Chain of Responsibility Pattern <a name="chain-of-responsibility-pattern"></a>
 
 **Scenario:** A customer support system has multiple support tiers: `Level1`, `Level2`, `Level3`.  
 
@@ -112,7 +112,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 8️⃣ Mediator Pattern
+## 8️⃣ Mediator Pattern <a name="mediator-pattern"></a>
 
 **Scenario:** You are building a chat application where users communicate through a chat room.  
 
@@ -124,7 +124,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 9️⃣ Memento Pattern
+## 9️⃣ Memento Pattern <a name="memento-pattern"></a>
 
 **Scenario:** Drawing Application.  
 
@@ -137,7 +137,7 @@ This repository contains a set of self-designed programming challenges focused o
 
 ---
 
-## 🔟 Visitor Pattern
+## 🔟 Visitor Pattern <a name="visitor-pattern"></a>
 
 **Scenario:** E-commerce Order System.  
 
