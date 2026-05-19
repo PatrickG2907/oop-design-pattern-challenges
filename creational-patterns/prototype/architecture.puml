@@ -1,0 +1,21 @@
+@startuml
+
+'==========================
+' Prototype Class
+'==========================
+class Character {
+    -name : str
+    -health : float
+    -attack_power : float
+    -skills : list
+
+    +clone() : Character
+    +__str__() : str
+}
+
+'==========================
+' Relationships
+'==========================
+Character ..> Character : clones itself
+
+@enduml
