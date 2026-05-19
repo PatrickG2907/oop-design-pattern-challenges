@@ -1,0 +1,81 @@
+@startuml
+
+'====================================================
+' Abstract Product
+'====================================================
+abstract class UIComponent {
+    +render()
+}
+
+'====================================================
+' Concrete Products
+'====================================================
+class LightButton {
+    +render()
+}
+
+class DarkButton {
+    +render()
+}
+
+class LightCheckbox {
+    +render()
+}
+
+class DarkCheckbox {
+    +render()
+}
+
+class LightSlider {
+    +render()
+}
+
+class DarkSlider {
+    +render()
+}
+
+'====================================================
+' Abstract Factory
+'====================================================
+class UIFactory {
+    -_creators : dict
+
+    +register_component(name: str, creator)
+    +create(name: str) : UIComponent
+}
+
+'====================================================
+' Concrete Factories
+'====================================================
+class LightFactory
+class DarkFactory
+
+'====================================================
+' Inheritance Relationships
+'====================================================
+UIComponent <|-- LightButton
+UIComponent <|-- DarkButton
+
+UIComponent <|-- LightCheckbox
+UIComponent <|-- DarkCheckbox
+
+UIComponent <|-- LightSlider
+UIComponent <|-- DarkSlider
+
+UIFactory <|-- LightFactory
+UIFactory <|-- DarkFactory
+
+'====================================================
+' Factory Dependencies
+'====================================================
+UIFactory ..> UIComponent : creates
+
+LightFactory ..> LightButton : registers
+LightFactory ..> LightCheckbox : registers
+LightFactory ..> LightSlider : registers
+
+DarkFactory ..> DarkButton : registers
+DarkFactory ..> DarkCheckbox : registers
+DarkFactory ..> DarkSlider : registers
+
+@enduml
