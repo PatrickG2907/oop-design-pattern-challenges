@@ -1,0 +1,46 @@
+@startuml
+
+'==========================
+' Product
+'==========================
+class Pizza {
+    -size : str
+    -crust : str
+    -toppings : list
+
+    +display() : str
+}
+
+'==========================
+' Builder
+'==========================
+class PizzaBuilder {
+    +VALID_SIZES : set
+    +VALID_CRUSTS : set
+    -_pizza : Pizza
+
+    +reset() : PizzaBuilder
+    +set_size(size) : PizzaBuilder
+    +set_crust(crust) : PizzaBuilder
+    +add_topping(topping) : PizzaBuilder
+    +build() : Pizza
+}
+
+'==========================
+' Director
+'==========================
+class PizzaDirector {
+    -builder : PizzaBuilder
+
+    +margherita() : Pizza
+    +pepperoni() : Pizza
+}
+
+'==========================
+' Relationships
+'==========================
+PizzaBuilder *-- Pizza : builds
+PizzaDirector --> PizzaBuilder : uses
+PizzaDirector --> Pizza : creates
+
+@enduml
