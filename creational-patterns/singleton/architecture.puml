@@ -1,0 +1,22 @@
+@startuml
+
+'==========================
+' Singleton Class
+'==========================
+class Logger {
+    -_instance : Logger
+    -_instance_lock : Lock
+    -_logs : list
+    -_log_lock : Lock
+
+    +__new__() : Logger
+    +log(message: str)
+    +show_logs()
+}
+
+'==========================
+' Relationships
+'==========================
+Logger ..> Logger : singleton instance
+
+@enduml
