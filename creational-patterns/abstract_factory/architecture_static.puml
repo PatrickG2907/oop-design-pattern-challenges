@@ -1,0 +1,95 @@
+@startuml
+
+'====================================================
+' Abstract Products
+'====================================================
+abstract class Button {
+    +render()
+}
+
+abstract class Checkbox {
+    +render()
+}
+
+abstract class Slider {
+    +render()
+}
+
+'====================================================
+' Concrete Products
+'====================================================
+class LightButton {
+    +render()
+}
+
+class DarkButton {
+    +render()
+}
+
+class LightCheckbox {
+    +render()
+}
+
+class DarkCheckbox {
+    +render()
+}
+
+class LightSlider {
+    +render()
+}
+
+class DarkSlider {
+    +render()
+}
+
+'====================================================
+' Abstract Factory
+'====================================================
+abstract class UIFactory {
+    +create_button() : Button
+    +create_checkbox() : Checkbox
+    +create_slider() : Slider
+}
+
+'====================================================
+' Concrete Factories
+'====================================================
+class LightFactory {
+    +create_button() : Button
+    +create_checkbox() : Checkbox
+    +create_slider() : Slider
+}
+
+class DarkFactory {
+    +create_button() : Button
+    +create_checkbox() : Checkbox
+    +create_slider() : Slider
+}
+
+'====================================================
+' Inheritance Relationships
+'====================================================
+Button <|-- LightButton
+Button <|-- DarkButton
+
+Checkbox <|-- LightCheckbox
+Checkbox <|-- DarkCheckbox
+
+Slider <|-- LightSlider
+Slider <|-- DarkSlider
+
+UIFactory <|-- LightFactory
+UIFactory <|-- DarkFactory
+
+'====================================================
+' Factory Dependencies
+'====================================================
+LightFactory ..> LightButton : creates
+LightFactory ..> LightCheckbox : creates
+LightFactory ..> LightSlider : creates
+
+DarkFactory ..> DarkButton : creates
+DarkFactory ..> DarkCheckbox : creates
+DarkFactory ..> DarkSlider : creates
+
+@enduml
