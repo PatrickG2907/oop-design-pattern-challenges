@@ -1,0 +1,36 @@
+@startuml
+' ----- Abstract Notification Interface -----
+abstract class Notification {
+    +send(message: str)
+}
+
+' ----- Concrete Notification Classes -----
+class EmailNotification {
+    +send(message: str)
+}
+
+class PushNotification {
+    +send(message: str)
+}
+
+class WhatsAppNotification {
+    +send(message: str)
+}
+
+' ----- Factory Class -----
+class NotificationFactory {
+    -_creators : dict
+    +register_notification(type_name: str, creator)
+    +create_notification(type_name: str) : Notification
+}
+
+' ----- Relationships -----
+Notification <|-- EmailNotification
+Notification <|-- PushNotification
+Notification <|-- WhatsAppNotification
+
+NotificationFactory ..> Notification : creates
+NotificationFactory ..> EmailNotification : registers
+NotificationFactory ..> PushNotification : registers
+NotificationFactory ..> WhatsAppNotification : registers
+@enduml
