@@ -1,0 +1,41 @@
+@startuml
+
+' =========================
+' Component (Abstract Base)
+' =========================
+abstract class FileSystemComponent {
+    #name : str
+    +display(indent=0)
+    +count_files()
+}
+
+' =========================
+' Leaf
+' =========================
+class File {
+    +display(indent=0)
+    +count_files()
+}
+
+' =========================
+' Composite
+' =========================
+class Folder {
+    -children : list
+    +add(component)
+    +display(indent=0)
+    +count_files()
+}
+
+' =========================
+' Inheritance hierarchy
+' =========================
+FileSystemComponent <|-- File
+FileSystemComponent <|-- Folder
+
+' =========================
+' Composite relationship (tree structure)
+' =========================
+Folder *-- FileSystemComponent : children
+
+@enduml
