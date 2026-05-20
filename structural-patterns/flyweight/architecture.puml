@@ -1,0 +1,47 @@
+@startuml
+
+' =========================
+' Flyweight (Intrinsic state)
+' =========================
+class CharacterStyle {
+    +bold : bool
+    +italic : bool
+    +color : str
+}
+
+' =========================
+' Flyweight Factory
+' =========================
+class StyleFactory {
+    {static} _styles : dict
+    {static} get_style(bold, italic, color)
+}
+
+StyleFactory --> CharacterStyle : creates / reuses
+
+' =========================
+' Context (Extrinsic state holder)
+' =========================
+class Character {
+    +char : str
+    +style : CharacterStyle
+    +highlight_color : str
+    +display()
+}
+
+Character --> CharacterStyle : uses (shared flyweight)
+
+' =========================
+' Client / Composite structure
+' =========================
+class TextDocument {
+    -characters : list
+    +add_text(text, style)
+    +highlight_range(start, end, color)
+    +remove_highlight(start, end)
+    +display()
+}
+
+TextDocument *-- Character : contains
+
+@enduml
