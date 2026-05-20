@@ -1,0 +1,56 @@
+@startuml
+
+' =========================
+' Component Interface
+' =========================
+abstract class Notification {
+    +send()
+}
+
+' =========================
+' Concrete Component
+' =========================
+class EmailNotification {
+    +send()
+}
+
+' =========================
+' Base Decorator
+' =========================
+class NotificationDecorator {
+    #_wrapped : Notification
+    +send()
+}
+
+' =========================
+' Concrete Decorators
+' =========================
+class SMSDecorator {
+    +send()
+}
+
+class PushDecorator {
+    +send()
+}
+
+class LoggingDecorator {
+    -notification_type : str
+    +send()
+}
+
+' =========================
+' Inheritance relationships
+' =========================
+Notification <|-- EmailNotification
+Notification <|-- NotificationDecorator
+NotificationDecorator <|-- SMSDecorator
+NotificationDecorator <|-- PushDecorator
+NotificationDecorator <|-- LoggingDecorator
+
+' =========================
+' Wrapping (core decorator structure)
+' =========================
+NotificationDecorator --> Notification : wraps (delegates to)
+LoggingDecorator --> Notification : wraps (via base class)
+
+@enduml
