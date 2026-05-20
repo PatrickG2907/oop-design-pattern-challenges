@@ -1,0 +1,20 @@
+@startuml
+
+class EcommercePlatform {
+    - payment_processor
+    + checkout(amount)
+}
+
+class NewPaymentGateway {
+    + make_payment(total)
+}
+
+class PaymentGatewayAdapter {
+    - gateway
+    + pay(amount)
+}
+
+EcommercePlatform --> PaymentGatewayAdapter : uses
+PaymentGatewayAdapter --> NewPaymentGateway : wraps / delegates to
+
+@enduml
