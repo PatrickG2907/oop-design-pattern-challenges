@@ -1,0 +1,44 @@
+@startuml
+
+' =========================
+' Subject Interface
+' =========================
+abstract class BookInterface {
+    +get_content(user_role: str)
+}
+
+' =========================
+' Real Subject
+' =========================
+class Book {
+    -title : str
+    -author : str
+    -_content_loader
+    -_content
+    +get_content(user_role: str)
+    -_load_content()
+}
+
+BookInterface <|-- Book
+
+' =========================
+' Proxy
+' =========================
+class BookProxy {
+    -title : str
+    -author : str
+    -_content_loader
+    -_real_book : Book
+    +get_content(user_role: str)
+    -_ensure_access(user_role: str)
+    -_load_real_book_if_needed()
+}
+
+BookInterface <|-- BookProxy
+
+' =========================
+' Relationships
+' =========================
+BookProxy --> Book : lazy instantiation (creates/uses)
+
+@enduml
