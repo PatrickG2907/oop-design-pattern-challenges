@@ -1,0 +1,55 @@
+@startuml
+
+' =========================
+' Abstract subsystem
+' =========================
+abstract class ElectricDevice {
+    +on()
+    +off()
+}
+
+' =========================
+' Concrete subsystems
+' =========================
+class Lights {
+    +on()
+    +off()
+}
+
+class AC {
+    +on()
+    +off()
+    +set_temperature(temp: int)
+}
+
+class Music {
+    +on()
+    +off()
+    +play_song(song: str)
+}
+
+ElectricDevice <|-- Lights
+ElectricDevice <|-- AC
+ElectricDevice <|-- Music
+
+' =========================
+' Facade
+' =========================
+class SmartHomeFacade {
+    -_lights : Lights
+    -_ac : AC
+    -_music : Music
+
+    +start_party()
+    +end_party()
+    +vacation_mode()
+}
+
+' =========================
+' Relationships (Facade to subsystems)
+' =========================
+SmartHomeFacade --> Lights : uses
+SmartHomeFacade --> AC : uses
+SmartHomeFacade --> Music : uses
+
+@enduml
