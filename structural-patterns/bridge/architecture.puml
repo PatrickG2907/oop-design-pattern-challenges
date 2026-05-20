@@ -1,0 +1,63 @@
+@startuml
+
+' =========================
+' Renderer hierarchy
+' =========================
+abstract class Renderer {
+    +draw(shape: str, **data)
+}
+
+class VectorRenderer {
+    +draw(shape: str, **data)
+}
+
+class RasterRenderer {
+    +draw(shape: str, **data)
+}
+
+class ASCIIRenderer {
+    -_draw_methods : dict
+    +draw(shape: str, **data)
+    -_draw_circle(radius: int)
+    -_draw_square(side: int)
+    -_draw_triangle(base: int, height: int)
+}
+
+Renderer <|-- VectorRenderer
+Renderer <|-- RasterRenderer
+Renderer <|-- ASCIIRenderer
+
+' =========================
+' Shape hierarchy (Abstraction side of Bridge)
+' =========================
+abstract class Shape {
+    #renderer : Renderer
+    +draw()
+}
+
+class Circle {
+    -radius : int
+    +draw()
+}
+
+class Square {
+    -side : int
+    +draw()
+}
+
+class Triangle {
+    -base : int
+    -height : int
+    +draw()
+}
+
+Shape <|-- Circle
+Shape <|-- Square
+Shape <|-- Triangle
+
+' =========================
+' Bridge relationship
+' =========================
+Shape --> Renderer : bridge (has-a)
+
+@enduml
