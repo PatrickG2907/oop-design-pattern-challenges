@@ -1,0 +1,60 @@
+@startuml
+
+' =========================
+' Command Interface
+' =========================
+abstract class Command {
+    +execute(): void
+    +undo(): void
+    +safety_check(): bool
+}
+
+' =========================
+' Concrete Commands
+' =========================
+class PickItem {
+    +item: str
+    +picked: bool
+    +execute(): void
+    +undo(): void
+    +safety_check(): bool
+}
+
+class PlaceItem {
+    +location: str
+    +placed: bool
+    +execute(): void
+    +undo(): void
+}
+
+class WeldItem {
+    +part: str
+    +welded: bool
+    +execute(): void
+    +undo(): void
+    +safety_check(): bool
+}
+
+' Inheritance only (correct)
+Command <|-- PickItem
+Command <|-- PlaceItem
+Command <|-- WeldItem
+
+' =========================
+' Robot Controller
+' =========================
+class RobotController {
+    +command_queue
+    +retry_queue
+    +history
+    --
+    +add_command(command: Command): void
+    +execute_commands(): void
+    +retry_commands(): void
+    +undo_last(): void
+}
+
+' Controller uses Command abstraction
+RobotController --> Command : queue / execute / undo
+
+@enduml
