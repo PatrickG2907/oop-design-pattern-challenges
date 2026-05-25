@@ -1,0 +1,85 @@
+@startuml
+
+' =========================
+' Song Model
+' =========================
+class Song {
+    +title: str
+    +artist: str
+    +duration_seconds: int
+    +explicit: bool
+}
+
+' =========================
+' Filter Interface
+' =========================
+abstract class SongFilter {
+    +apply(songs: List<Song>, **criteria): List<Song>
+}
+
+class ExplicitSongFilter {
+    +apply(songs: List<Song>, **criteria): List<Song>
+}
+
+class DurationSongFilter {
+    +apply(songs: List<Song>, **criteria): List<Song>
+}
+
+SongFilter <|-- ExplicitSongFilter
+SongFilter <|-- DurationSongFilter
+
+' =========================
+' Iterator Interface
+' =========================
+interface SongIterator {
+    +__next__(): Song
+    +__iter__()
+}
+
+' =========================
+' Concrete Iterators
+' =========================
+class SequentialSongIterator {
+    -_songs: List<Song>
+    -_index: int
+    +__next__(): Song
+}
+
+class ShuffledSongIterator {
+    -_songs: List<Song>
+    -_index: int
+    +__next__(): Song
+}
+
+class RepeatedSongIterator {
+    -_songs: List<Song>
+    -_index: int
+    +__next__(): Song
+}
+
+SongIterator <|.. SequentialSongIterator
+SongIterator <|.. ShuffledSongIterator
+SongIterator <|.. RepeatedSongIterator
+
+' =========================
+' Playlist
+' =========================
+class Playlist {
+    -_songs: List<Song>
+    +sequential_iterator(song_filter, **criteria): SongIterator
+    +shuffled_iterator(song_filter, **criteria): SongIterator
+    +repeated_iterator(song_filter, repeat, **criteria): SongIterator
+}
+
+Playlist --> Song
+Playlist --> SongFilter
+Playlist --> SongIterator
+
+' =========================
+' Iterator holds Songs
+' =========================
+SequentialSongIterator --> Song
+ShuffledSongIterator --> Song
+RepeatedSongIterator --> Song
+
+@enduml
