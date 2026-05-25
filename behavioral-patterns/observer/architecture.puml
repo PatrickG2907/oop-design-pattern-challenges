@@ -1,0 +1,57 @@
+@startuml
+
+' =========================
+' Observer Interface
+' =========================
+interface Observer {
+    +update(temperature: int = None, humidity: int = None): void
+}
+
+' =========================
+' Subject Interface
+' =========================
+interface Subject {
+    +attach(observer: Observer): void
+    +detach(observer: Observer): void
+}
+
+' =========================
+' Weather Station (Concrete Subject)
+' =========================
+class WeatherStation {
+    -_observers: List<Observer>
+    -_temperature: int
+    -_prev_temperature: int
+    -_humidity: int
+    --
+    +__init__(temperature: int, humidity: int)
+    +attach(observer: Observer): void
+    +detach(observer: Observer): void
+    +update_weather(temperature: int = None, humidity: int = None): void
+}
+
+Subject <|.. WeatherStation
+
+WeatherStation --> Observer
+
+' =========================
+' Concrete Observers
+' =========================
+class PhoneDisplay {
+    +name: str
+    +min_temp_change: int
+    +watch_humidity: bool
+    +update(temperature: int = None, humidity: int = None): void
+}
+
+class WindowDisplay {
+    +name: str
+    +min_temp_change: int
+    +watch_humidity: bool
+    +update(temperature: int = None, humidity: int = None): void
+}
+
+Observer <|.. PhoneDisplay
+Observer <|.. WindowDisplay
+
+@enduml
