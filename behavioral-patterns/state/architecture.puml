@@ -1,0 +1,56 @@
+@startuml
+
+' =========================
+' State Interface
+' =========================
+interface MediaPlayerState {
+    +play(player): void
+    +pause(player): void
+    +stop(player): void
+}
+
+' =========================
+' Concrete States
+' =========================
+class StoppedState {
+    +play(player): void
+    +pause(player): void
+    +stop(player): void
+}
+
+class PlayingState {
+    +play(player): void
+    +pause(player): void
+    +stop(player): void
+}
+
+class PausedState {
+    +play(player): void
+    +pause(player): void
+    +stop(player): void
+}
+
+MediaPlayerState <|.. StoppedState
+MediaPlayerState <|.. PlayingState
+MediaPlayerState <|.. PausedState
+
+' =========================
+' Context
+' =========================
+class MediaPlayer {
+    -playlist
+    -current_track
+    -state: MediaPlayerState
+    -shuffle: bool
+    --
+    +__init__(playlist)
+    +toggle_shuffle(): void
+    +play(): void
+    +pause(): void
+    +stop(): void
+}
+
+' Correct: depends only on abstraction
+MediaPlayer --> MediaPlayerState
+
+@enduml
