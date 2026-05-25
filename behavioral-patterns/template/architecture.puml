@@ -1,0 +1,68 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+' -----------------------
+' Abstract Class
+' -----------------------
+abstract class Quiz {
+    +take_quiz(): void
+
+    +display_questions(): void
+    +collect_answers(): List[Any]
+    +score_answers(answers: List[Any]): int
+    +show_feedback(score: int): void
+
+    ' Hooks
+    +has_bonus(): bool
+    +score_bonus(): int
+    +show_bonus_feedback(bonus_score: int): void
+    +is_eligible_for_bonus(score: int): bool
+}
+
+' -----------------------
+' Concrete Classes
+' -----------------------
+class MathQuiz {
+    -questions: List[str]
+    -correct_answers: List[int]
+    -bonus_question: str
+
+    +display_questions(): void
+    +collect_answers(): List[int]
+    +score_answers(answers: List[int]): int
+    +show_feedback(score: int): void
+
+    +has_bonus(): bool
+    +is_eligible_for_bonus(score: int): bool
+    +score_bonus(): int
+}
+
+class HistoryQuiz {
+    -questions: List[str]
+    -correct_answers: List[str]
+
+    +display_questions(): void
+    +collect_answers(): List[str]
+    +score_answers(answers: List[str]): int
+    +show_feedback(score: int): void
+}
+
+class CodingQuiz {
+    -questions: List[str]
+    -correct_answers: List[str]
+
+    +display_questions(): void
+    +collect_answers(): List[str]
+    +score_answers(answers: List[str]): int
+    +show_feedback(score: int): void
+}
+
+' -----------------------
+' Inheritance relationships
+' -----------------------
+Quiz <|-- MathQuiz
+Quiz <|-- HistoryQuiz
+Quiz <|-- CodingQuiz
+
+@enduml
