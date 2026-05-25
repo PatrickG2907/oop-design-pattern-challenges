@@ -1,0 +1,130 @@
+@startuml
+
+' =========================
+' Shape Abstraction (Composite root)
+' =========================
+abstract class Shape {
+    +x: int
+    +y: int
+    +move(dx: int, dy: int): void
+    +deep_copy(): Shape
+    +accept(visitor: ShapeVisitor): str
+}
+
+' =========================
+' Concrete Shapes
+' =========================
+class Circle {
+    +radius: int
+    +__post_init__(): void
+    +deep_copy(): Circle
+    +accept(visitor: ShapeVisitor): str
+}
+
+class Rectangle {
+    +width: int
+    +height: int
+    +__post_init__(): void
+    +deep_copy(): Rectangle
+    +accept(visitor: ShapeVisitor): str
+}
+
+Shape <|-- Circle
+Shape <|-- Rectangle
+
+Circle --> ShapeVisitor
+Rectangle --> ShapeVisitor
+
+' =========================
+' Composite Pattern
+' =========================
+class ShapeGroup {
+    -_children: List<Shape>
+    +add(shape: Shape): void
+    +remove(shape: Shape): void
+    +children: List<Shape>
+    +move(dx: int, dy: int): void
+    +deep_copy(): ShapeGroup
+    +accept(visitor: ShapeVisitor): str
+}
+
+Shape <|-- ShapeGroup
+
+ShapeGroup --> Shape
+
+' =========================
+' Visitor Pattern
+' =========================
+interface ShapeVisitor {
+    +visit_circle(circle: Circle): str
+    +visit_rectangle(rectangle: Rectangle): str
+    +visit_group(group: ShapeGroup): str
+}
+
+class ShapePrinterVisitor {
+    +visit_circle(circle: Circle): str
+    +visit_rectangle(rectangle: Rectangle): str
+    +visit_group(group: ShapeGroup): str
+}
+
+ShapeVisitor <|.. ShapePrinterVisitor
+
+ShapePrinterVisitor --> Circle
+ShapePrinterVisitor --> Rectangle
+ShapePrinterVisitor --> ShapeGroup
+
+' =========================
+' Memento Pattern
+' =========================
+abstract class AbstractDrawingMemento {
+    +state: List<Shape>
+}
+
+class DrawingMemento {
+    -_state: List<Shape>
+    +state: List<Shape>
+}
+
+AbstractDrawingMemento <|-- DrawingMemento
+
+DrawingMemento --> Shape
+
+' =========================
+' Drawing (Originator)
+' =========================
+interface DrawingInterface {
+    +save(): AbstractDrawingMemento
+    +restore(memento: AbstractDrawingMemento): void
+}
+
+class Drawing {
+    -_shapes: List<Shape>
+    +add_shape(shape: Shape): void
+    +remove_shape(shape: Shape): void
+    +move_shape(shape: Shape, dx: int, dy: int): void
+    +save(): AbstractDrawingMemento
+    +restore(memento: AbstractDrawingMemento): void
+    +accept(visitor: ShapeVisitor): str
+}
+
+DrawingInterface <|.. Drawing
+
+Drawing --> Shape
+Drawing --> ShapeVisitor
+Drawing --> AbstractDrawingMemento
+
+' =========================
+' History Manager (Caretaker)
+' =========================
+class HistoryManager {
+    -_undo_stack: List<AbstractDrawingMemento>
+    -_redo_stack: List<AbstractDrawingMemento>
+    +save(drawing: DrawingInterface): void
+    +undo(drawing: DrawingInterface): void
+    +redo(drawing: DrawingInterface): void
+}
+
+HistoryManager --> DrawingInterface
+HistoryManager --> AbstractDrawingMemento
+
+@enduml
