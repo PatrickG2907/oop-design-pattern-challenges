@@ -1,0 +1,124 @@
+@startuml
+
+' -----------------------------
+' Enums
+' -----------------------------
+enum Severity {
+    LOW
+    MEDIUM
+    HIGH
+    CRITICAL
+}
+
+enum Tag {
+    URGENT
+    VIP
+    SECURITY
+}
+
+' -----------------------------
+' Request (immutable dataclass)
+' -----------------------------
+class Request {
+    +severity: Severity
+    +name: str
+    +tag: Optional<Tag>
+    --
+    +with_escalation(new_severity: Severity): Request
+}
+
+' -----------------------------
+' Notifier Interface
+' -----------------------------
+interface Notifier {
+    +notify_handled(handler_name: str, request: Request): void
+    +notify_routing(request: Request): void
+    +notify_skipped(handler_name: str, request: Request): void
+    +notify_error(request: Request): void
+}
+
+class ConsoleNotifier {
+    +notify_handled(handler_name: str, request: Request): void
+    +notify_routing(request: Request): void
+    +notify_skipped(handler_name: str, request: Request): void
+    +notify_error(request: Request): void
+}
+
+class NullNotifier {
+    +notify_handled(handler_name: str, request: Request): void
+    +notify_routing(request: Request): void
+    +notify_skipped(handler_name: str, request: Request): void
+    +notify_error(request: Request): void
+}
+
+Notifier <|.. ConsoleNotifier
+Notifier <|.. NullNotifier
+
+' -----------------------------
+' Abstract Handler
+' -----------------------------
+abstract class AbstractHandler {
+    +successor: Optional<AbstractHandler>
+    +notifier: Notifier
+    --
+    +handle(request: Request): void
+}
+
+' -----------------------------
+' SupportHandler (Concrete)
+' -----------------------------
+class SupportHandler {
+    +name: str
+    +supported_levels: Set<Severity>
+    --
+    +handle(request: Request): void
+}
+
+AbstractHandler <|-- SupportHandler
+
+AbstractHandler --> AbstractHandler : successor
+AbstractHandler --> Notifier
+
+SupportHandler --> Severity
+
+' -----------------------------
+' Escalator
+' -----------------------------
+class Escalator {
+    +rules: Dict<Tag, Severity>
+    --
+    +escalate(request: Request): Request
+}
+
+Escalator --> Tag
+Escalator --> Severity
+Escalator --> Request
+
+' -----------------------------
+' Router
+' -----------------------------
+class Router {
+    +default_handler: AbstractHandler
+    +entry_overrides: Dict<Tag, AbstractHandler>
+    +escalator: Escalator
+    +notifier: Notifier
+    --
+    +route(request: Request): void
+}
+
+Router --> AbstractHandler
+Router --> Escalator
+Router --> Notifier
+Router --> Tag
+Router --> Request
+
+' -----------------------------
+' Relationships summary
+' -----------------------------
+SupportHandler --> Request
+SupportHandler --> Notifier
+
+ConsoleNotifier ..> Request
+NullNotifier ..> Request
+
+@enduml
