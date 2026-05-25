@@ -1,0 +1,229 @@
+@startuml
+
+' =====================================
+' ENUMS
+' =====================================
+enum Gender {
+    MALE
+    FEMALE
+    OTHER
+}
+
+enum Profiles {
+    CHILD
+    TEEN
+    ADULT
+}
+
+' =====================================
+' PROFILE SYSTEM
+' =====================================
+class ProfileAssigner {
+    +assign_profile(age: int): Profiles
+}
+
+class User {
+    +name: str
+    +age: int
+    +gender: Gender
+    +profile_assigner: ProfileAssigner
+    +profile: Profiles
+    --
+    +__post_init__(): void
+    +_validate(): void
+    +__str__(): str
+}
+
+User --> Gender
+User --> Profiles
+User --> ProfileAssigner
+ProfileAssigner --> Profiles
+
+' =====================================
+' MESSAGE MODEL
+' =====================================
+class Message {
+    +sender: User
+    +content: str
+}
+
+Message --> User
+
+' =====================================
+' OBSERVER SYSTEM NOTIFICATION
+' =====================================
+interface ISystemNotification {
+    +notify_add_user(name: str): void
+    +notify_remove_user(name: str): void
+    +notify_remove_error(name: str): void
+}
+
+class SystemNotificationPrint {
+    +notify_add_user(name: str): void
+    +notify_remove_user(name: str): void
+    +notify_remove_error(name: str): void
+}
+
+ISystemNotification <|.. SystemNotificationPrint
+
+interface INotifier {
+    +attach(observer: ISystemNotification): void
+    +notify_add(user: User): void
+    +notify_remove(user: User): void
+    +notify_remove_error(user: User): void
+}
+
+class NotifierService {
+    -_observers: List<ISystemNotification>
+    +__init__(): void
+    +attach(observer: ISystemNotification): void
+    +notify_add(user: User): void
+    +notify_remove(user: User): void
+    +notify_remove_error(user: User): void
+}
+
+INotifier <|.. NotifierService
+
+NotifierService --> ISystemNotification
+NotifierService --> User
+
+' =====================================
+' USER MANAGEMENT
+' =====================================
+interface IUserManagement {
+    +add_user(user: User): void
+    +remove_user(user: User): void
+    +users
+}
+
+class UserManagementList {
+    -_users: List<User>
+    -_notifier: INotifier
+    +__init__(notifier: INotifier): void
+    +users
+    +add_user(user: User): void
+    +remove_user(user: User): void
+}
+
+IUserManagement <|.. UserManagementList
+
+UserManagementList --> User
+UserManagementList --> INotifier
+
+' =====================================
+' MESSAGE FILTERING
+' =====================================
+interface IFilterMessage {
+    +filter(message: Message): Message
+}
+
+class BannedWordFilter {
+    -_banned_words: set
+    +__init__(banned_words: List[str]): void
+    +filter(message: Message): Message
+}
+
+IFilterMessage <|.. BannedWordFilter
+
+interface IMessageProcessor {
+    +process(message: Message): Message
+}
+
+class MessageProcessor {
+    -_filters: List<IFilterMessage>
+    +__init__(filters: List<IFilterMessage>): void
+    +process(message: Message): Message
+}
+
+IMessageProcessor <|.. MessageProcessor
+
+MessageProcessor --> IFilterMessage
+MessageProcessor --> Message
+BannedWordFilter --> Message
+
+' =====================================
+' RECIPIENT FILTERING
+' =====================================
+interface IFilterRecipient {
+    +should_block(sender: User, receiver: User): bool
+}
+
+class FilterAge {
+    -_allowed_profiles: List<Profiles>
+    +__init__(allowed_profiles: List<Profiles>): void
+    +should_block(sender: User, receiver: User): bool
+}
+
+class FilterGender {
+    -_allowed_genders: List[Gender]
+    +__init__(allowed_genders: List[Gender]): void
+    +should_block(sender: User, receiver: User): bool
+}
+
+IFilterRecipient <|.. FilterAge
+IFilterRecipient <|.. FilterGender
+
+FilterAge --> Profiles
+FilterGender --> Gender
+FilterAge --> User
+FilterGender --> User
+
+' =====================================
+' OUTPUT + MESSENGER
+' =====================================
+interface IMessageOutput {
+    +send(text: str): void
+}
+
+class ConsoleOutput {
+    +send(text: str): void
+}
+
+IMessageOutput <|.. ConsoleOutput
+
+interface IMessenger {
+    +send(message: Message, recipients: List<User>): void
+}
+
+class ConsoleMessenger {
+    -_recipient_filters: List<IFilterRecipient>
+    -_output: IMessageOutput
+    +__init__(recipient_filters: List<IFilterRecipient>, output: IMessageOutput): void
+    +send(message: Message, recipients: List<User>): void
+}
+
+IMessenger <|.. ConsoleMessenger
+
+ConsoleMessenger --> IFilterRecipient
+ConsoleMessenger --> IMessageOutput
+ConsoleMessenger --> Message
+ConsoleMessenger --> User
+
+' =====================================
+' MEDIATOR
+' =====================================
+interface Mediator {
+    +add_user(user: User): void
+    +remove_user(user: User): void
+    +send_message(sender: User, content: str): void
+}
+
+class ChatRoom {
+    -_user_management: IUserManagement
+    -_message_processor: IMessageProcessor
+    -_messenger: IMessenger
+    +__init__(user_management: IUserManagement, message_processor: IMessageProcessor, messenger: IMessenger): void
+    +add_user(user: User): void
+    +remove_user(user: User): void
+    +send_message(sender: User, content: str): void
+}
+
+Mediator <|.. ChatRoom
+
+ChatRoom --> IUserManagement
+ChatRoom --> IMessageProcessor
+ChatRoom --> IMessenger
+ChatRoom --> User
+ChatRoom --> Message
+
+@enduml
