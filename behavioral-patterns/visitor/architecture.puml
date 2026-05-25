@@ -1,0 +1,72 @@
+@startuml
+
+' =========================
+' Core Data Class
+' =========================
+class PriceBreakdown {
+    +discounted: float
+    +tax: float
+    +shipping: float
+    +total: float
+}
+
+' =========================
+' Order Item Hierarchy
+' =========================
+abstract class OrderItem {
+    +name: str
+    +base_price: float
+
+    +discount_rate: float
+    +tax_rate: float
+    +shipping_cost: float
+
+    +accept(visitor: Visitor, breakdown: PriceBreakdown): PriceBreakdown
+}
+
+class PhysicalProduct {
+    +shipping_cost: float
+}
+
+class DigitalProduct {
+}
+
+class Service {
+    +discount_rate: float
+}
+
+OrderItem <|-- PhysicalProduct
+OrderItem <|-- DigitalProduct
+OrderItem <|-- Service
+
+' =========================
+' Visitor Hierarchy
+' =========================
+abstract class Visitor {
+    +visit(item: OrderItem, breakdown: PriceBreakdown): PriceBreakdown
+}
+
+class DiscountApplier {
+    +visit(item: OrderItem, breakdown: PriceBreakdown): PriceBreakdown
+}
+
+class TaxCalculator {
+    +visit(item: OrderItem, breakdown: PriceBreakdown): PriceBreakdown
+}
+
+class ShippingCostCalculator {
+    +visit(item: OrderItem, breakdown: PriceBreakdown): PriceBreakdown
+}
+
+Visitor <|-- DiscountApplier
+Visitor <|-- TaxCalculator
+Visitor <|-- ShippingCostCalculator
+
+' =========================
+' Relationships (Visitor Pattern)
+' =========================
+Visitor ..> OrderItem : visits
+Visitor ..> PriceBreakdown : updates
+OrderItem ..> Visitor : accept()
+
+@enduml
