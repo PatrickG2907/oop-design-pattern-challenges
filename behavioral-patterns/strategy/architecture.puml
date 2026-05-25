@@ -1,0 +1,78 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+' ----------------------
+' Core Classes
+' ----------------------
+
+class Player {
+    +health: int
+    +position: int
+    +move(step: int): void
+    +take_damage(damage: int): void
+}
+
+class Enemy {
+    +name: str
+    +health: int
+    +max_health: int
+    +position: int
+    +strategy: Strategy
+    +attack(player: Player, orchestrator: Orchestrator): void
+    +take_damage(damage: int): void
+}
+
+class Orchestrator {
+    +AGGRESSIVE_RANGE: int
+    +DEFENSIVE_RANGE: int
+    +BERSERK_THRESHOLD: float
+    +LOW_HEALTH_THRESHOLD: float
+    +calc_proximity(player_position: int, enemy_position: int): int
+    +choose_strategy(enemy, player: Player): Strategy
+}
+
+' ----------------------
+' Strategy Pattern
+' ----------------------
+
+abstract class Strategy {
+    +execute_attack(enemy, player: Player): void
+}
+
+class AggressiveAttack {
+    +execute_attack(enemy, player: Player): void
+}
+
+class DefensiveAttack {
+    +execute_attack(enemy, player: Player): void
+}
+
+class HitAndRunAttack {
+    +execute_attack(enemy, player: Player): void
+}
+
+class BerserkAttack {
+    +execute_attack(enemy, player: Player): void
+}
+
+' ----------------------
+' Inheritance relationships
+' ----------------------
+
+Strategy <|-- AggressiveAttack
+Strategy <|-- DefensiveAttack
+Strategy <|-- HitAndRunAttack
+Strategy <|-- BerserkAttack
+
+' ----------------------
+' Associations / Dependencies
+' ----------------------
+
+Enemy --> Strategy : uses
+Enemy --> Player : attacks
+Enemy --> Orchestrator : delegates strategy selection
+
+Orchestrator --> Strategy : creates/chooses
+
+@enduml
