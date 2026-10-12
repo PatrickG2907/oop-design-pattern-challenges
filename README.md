@@ -23,8 +23,8 @@ Design patterns are proven solutions to recurring software design problems. This
 - **Structural Patterns** 🧩 – Object composition and relationships  
 - **Behavioral Patterns** 🔄 – Communication and responsibility between objects  
 
-All challenges are designed and implemented with **Python’s OOP features** in mind, including:
-- Abstract base classes (`abc`)
+All challenges are designed and implemented with **OOP features** in mind, including:
+- Abstract base classes
 - Composition over inheritance
 - Duck typing and polymorphism
 - Dependency inversion
