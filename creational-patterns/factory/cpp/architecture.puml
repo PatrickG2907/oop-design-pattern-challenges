@@ -1,0 +1,51 @@
+@startuml
+title Design Pattern 2 - Factory Method Notification System
+
+abstract class Notification {
+    + send(message : std::string_view) : void
+}
+
+class EmailNotification {
+    + send(message : std::string_view) : void
+}
+
+class PushNotification {
+    + send(message : std::string_view) : void
+}
+
+class WhatsAppNotification {
+    + send(message : std::string_view) : void
+}
+
+abstract class NotificationCreator {
+    + ~NotificationCreator()
+    + create_notification() : std::unique_ptr<Notification>
+}
+
+class EmailNotificationCreator {
+    + create_notification() : std::unique_ptr<Notification>
+}
+
+class PushNotificationCreator {
+    + create_notification() : std::unique_ptr<Notification>
+}
+
+class WhatsAppNotificationCreator {
+    + create_notification() : std::unique_ptr<Notification>
+}
+
+Notification <|-- EmailNotification
+Notification <|-- PushNotification
+Notification <|-- WhatsAppNotification
+
+NotificationCreator <|-- EmailNotificationCreator
+NotificationCreator <|-- PushNotificationCreator
+NotificationCreator <|-- WhatsAppNotificationCreator
+
+NotificationCreator ..> Notification
+
+EmailNotificationCreator ..> EmailNotification
+PushNotificationCreator ..> PushNotification
+WhatsAppNotificationCreator ..> WhatsAppNotification
+
+@enduml
