@@ -1,0 +1,25 @@
+@startuml
+title Design Pattern 1 - Thread-Safe Singleton Logger
+
+class Logger {
+    - Logger()
+
+    - messages_ : std::vector<std::string>
+    - mutex_ : std::mutex
+
+    + {static} instance() : Logger&
+    + Logger(other : const Logger&) = delete
+    + operator=(other : const Logger&) : Logger& = delete
+    + Logger(other : Logger&&) = delete
+    + operator=(other : Logger&&) : Logger& = delete
+
+    + log(message : std::string_view) : void
+    + show_logs() : void
+}
+
+class "main()" as Main {
+}
+
+Main ..> Logger : accesses singleton
+
+@enduml
