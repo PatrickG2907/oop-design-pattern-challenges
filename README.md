@@ -1,9 +1,9 @@
-# OOP Design Pattern Challenges (Python) 🧠🐍
+# OOP Design Pattern Challenges (Python & C++) 🧠🐍
 
 Welcome to the **OOP Design Pattern Challenges** repository! 🚀  
-This repo contains a collection of self-designed challenges aimed at practicing and mastering Object-Oriented Programming (OOP) design patterns using **Python**.
+This repo contains a collection of self-designed challenges aimed at practicing and mastering Object-Oriented Programming (OOP) design patterns using **Python** and **C++**.
 
-The focus is on **design and architecture**, not just implementing textbook definitions. Each challenge encourages clean abstractions, extensibility, and idiomatic Python solutions ✨
+The focus is on **design and architecture**, not just implementing textbook definitions. Each challenge encourages clean abstractions, extensibility, and idiomatic Python and C++ solutions ✨
 
 ## Table of Contents 📚
 - [Overview](#overview)
@@ -75,7 +75,7 @@ No external frameworks are required unless explicitly stated in a challenge.
 ## How to Use 🚦 <a name="how-to-use"></a>
 1. Navigate to a pattern category (`creational`, `structural`, `behavioral`).
 2. Read the challenge description 📖
-3. Implement a solution in **Python** 🧑‍💻
+3. Implement a solution in **Python** or **C++** 🧑‍💻
 4. Refactor and experiment with alternative designs 🔁
 5. Extend the challenge with new requirements if you’re feeling brave 😄
 
@@ -83,10 +83,10 @@ These challenges are intentionally open-ended—there is no single “correct”
 
 ## Contributing 🤝 <a name="contributing"></a>
 Contributions are welcome! You can help by:
-- Adding new Python-based challenges ✨
+- Adding new Python-based or C++-based challenges ✨
 - Improving problem statements
 - Providing alternative implementations
-- Suggesting more Pythonic refactors 🐍
+- Suggesting more Pythonic or C++-idiomatic refactors 🐍
 
 To contribute:
 1. Fork the repository 🍴
