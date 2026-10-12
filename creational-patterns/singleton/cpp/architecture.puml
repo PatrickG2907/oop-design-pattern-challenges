@@ -1,5 +1,5 @@
 @startuml
-title Design Pattern 1 - Thread-Safe Singleton Logger
+title Singleton Pattern: Thread-Safe Logger
 
 class Logger {
     - Logger()
