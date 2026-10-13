@@ -1,0 +1,104 @@
+@startuml
+title Design Pattern 3 - Abstract Factory UI Toolkit
+
+abstract class Button {
+    + ~Button()
+    + render() const : void
+    + click() const : void
+}
+
+abstract class Checkbox {
+    - checked_ : bool
+    + ~Checkbox()
+    + render() const : void
+    + set_checked(checked : bool) : void
+    + checked() const : bool
+}
+
+abstract class Slider {
+    - value_ : int
+    - {static} minimum_ : int = 0
+    - {static} maximum_ : int = 100
+    + ~Slider()
+    + render() const : void
+    + set_value(value : int) : void
+    + value() const : int
+}
+
+class LightButton {
+    + render() const : void
+}
+
+class LightCheckbox {
+    + render() const : void
+}
+
+class LightSlider {
+    + render() const : void
+}
+
+class DarkButton {
+    + render() const : void
+}
+
+class DarkCheckbox {
+    + render() const : void
+}
+
+class DarkSlider {
+    + render() const : void
+}
+
+abstract class UIFactory {
+    + ~UIFactory()
+    + create_button() const : std::unique_ptr<Button>
+    + create_checkbox() const : std::unique_ptr<Checkbox>
+    + create_slider() const : std::unique_ptr<Slider>
+}
+
+class LightFactory {
+    + create_button() const : std::unique_ptr<Button>
+    + create_checkbox() const : std::unique_ptr<Checkbox>
+    + create_slider() const : std::unique_ptr<Slider>
+}
+
+class DarkFactory {
+    + create_button() const : std::unique_ptr<Button>
+    + create_checkbox() const : std::unique_ptr<Checkbox>
+    + create_slider() const : std::unique_ptr<Slider>
+}
+
+class "client_logic()" as ClientLogic {
+    + client_logic(factory : const UIFactory&) : void
+}
+
+Button <|-- LightButton
+Button <|-- DarkButton
+
+Checkbox <|-- LightCheckbox
+Checkbox <|-- DarkCheckbox
+
+Slider <|-- LightSlider
+Slider <|-- DarkSlider
+
+UIFactory <|-- LightFactory
+UIFactory <|-- DarkFactory
+
+UIFactory ..> Button
+UIFactory ..> Checkbox
+UIFactory ..> Slider
+
+LightFactory ..> LightButton
+LightFactory ..> LightCheckbox
+LightFactory ..> LightSlider
+
+DarkFactory ..> DarkButton
+DarkFactory ..> DarkCheckbox
+DarkFactory ..> DarkSlider
+
+ClientLogic ..> UIFactory
+ClientLogic ..> Button
+ClientLogic ..> Checkbox
+ClientLogic ..> Slider
+
+@enduml
