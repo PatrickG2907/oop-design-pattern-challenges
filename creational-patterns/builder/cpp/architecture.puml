@@ -1,0 +1,50 @@
+@startuml
+title Design Pattern 4 - Builder Pizza Ordering System
+
+enum Size {
+    Small
+    Medium
+    Large
+}
+
+enum CrustType {
+    Thin
+    Thick
+    Stuffed
+}
+
+class Pizza {
+    - size_ : Size
+    - crust_ : CrustType
+    - toppings_ : std::vector<std::string>
+    + Pizza(size : Size, crust : CrustType, toppings : std::vector<std::string>)
+    + display() const : void
+}
+
+class PizzaBuilder {
+    - size_ : Size
+    - crust_ : CrustType
+    - toppings_ : std::vector<std::string>
+    + PizzaBuilder()
+    + set_size(size : Size) : PizzaBuilder&
+    + set_crust(crust : CrustType) : PizzaBuilder&
+    + add_topping(topping : std::string) : PizzaBuilder&
+    + build() : Pizza
+}
+
+class Director {
+    + make_margherita(builder : PizzaBuilder&) const : Pizza
+    + make_pepperoni(builder : PizzaBuilder&) const : Pizza
+}
+
+Pizza --> Size
+Pizza --> CrustType
+
+PizzaBuilder --> Size
+PizzaBuilder --> CrustType
+PizzaBuilder ..> Pizza
+
+Director ..> PizzaBuilder
+Director ..> Pizza
+
+@enduml
