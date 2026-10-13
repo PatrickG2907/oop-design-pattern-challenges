@@ -1,7 +1,8 @@
 @startuml
-title Design Pattern 2 - Factory Method Notification System
+title Factory Method Pattern: Notification System
 
 abstract class Notification {
+    + ~Notification()
     + send(message : std::string_view) : void
 }
 
@@ -34,6 +35,10 @@ class WhatsAppNotificationCreator {
     + create_notification() : std::unique_ptr<Notification>
 }
 
+class "client_logic()" as ClientLogic {
+    + client_logic(creator : const NotificationCreator&) : void
+}
+
 Notification <|-- EmailNotification
 Notification <|-- PushNotification
 Notification <|-- WhatsAppNotification
@@ -47,5 +52,8 @@ NotificationCreator ..> Notification
 EmailNotificationCreator ..> EmailNotification
 PushNotificationCreator ..> PushNotification
 WhatsAppNotificationCreator ..> WhatsAppNotification
+
+ClientLogic ..> NotificationCreator
+ClientLogic ..> Notification
 
 @enduml
