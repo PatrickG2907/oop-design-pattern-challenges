@@ -2,39 +2,40 @@
 title Design Pattern 4 - Builder Pizza Ordering System
 
 enum Size {
-    Small
-    Medium
-    Large
+    SMALL
+    MEDIUM
+    LARGE
 }
 
 enum CrustType {
-    Thin
-    Thick
-    Stuffed
+    THIN
+    THICK
+    STUFFED
 }
 
 class Pizza {
     - size_ : Size
-    - crust_ : CrustType
+    - crust_type_ : CrustType
     - toppings_ : std::vector<std::string>
-    + Pizza(size : Size, crust : CrustType, toppings : std::vector<std::string>)
+    + Pizza(size : Size, crust_type : CrustType, toppings : std::vector<std::string>)
     + display() const : void
 }
 
 class PizzaBuilder {
-    - size_ : Size
-    - crust_ : CrustType
+    - size_ : Size = Size::MEDIUM
+    - crust_type_ : CrustType = CrustType::THICK
     - toppings_ : std::vector<std::string>
     + PizzaBuilder()
+    + reset() : PizzaBuilder&
     + set_size(size : Size) : PizzaBuilder&
-    + set_crust(crust : CrustType) : PizzaBuilder&
+    + set_crust(crust_type : CrustType) : PizzaBuilder&
     + add_topping(topping : std::string) : PizzaBuilder&
-    + build() : Pizza
+    + build() const : Pizza
 }
 
 class Director {
-    + make_margherita(builder : PizzaBuilder&) const : Pizza
-    + make_pepperoni(builder : PizzaBuilder&) const : Pizza
+    + make_margherita(pizza_builder : PizzaBuilder&) const : Pizza
+    + make_pepperoni(pizza_builder : PizzaBuilder&) const : Pizza
 }
 
 Pizza --> Size
