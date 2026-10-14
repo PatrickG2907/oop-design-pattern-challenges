@@ -1,0 +1,33 @@
+@startuml
+title Design Pattern 5 - Prototype Game Character System
+
+class Character {
+    - name_ : std::string
+    - health_ : int
+    - attack_power_ : int
+    - skills_ : std::vector<std::string>
+
+    + Character(
+        name : std::string,
+        health : int,
+        attack_power : int,
+        skills : std::vector<std::string>
+      )
+
+    + clone() const : Character
+
+    + set_name(name : std::string) : void
+    + set_health(health : int) : void
+    + set_attack_power(attack_power : int) : void
+    + add_skill(skill : std::string) : void
+
+    + display() const : void
+}
+
+class "client_logic()" as ClientLogic {
+    + client_logic() : void
+}
+
+ClientLogic ..> Character : clones and modifies
+
+@enduml
