@@ -213,8 +213,8 @@ public:
     // Creates the finished Pizza without consuming or resetting the builder.
     // Notes:
     //  - build() is const because construction of the product does not modify 
-    //    the builder's configuration. This makes the builder reusable and allows the same
-    //    configuration to produce multiple Pizza objects.
+    //    the builder's configuration. This makes the builder reusable and allows 
+    //    the same configuration to produce multiple Pizza objects.
     //  - toppings_ is copied here so the builder retains its toppings; Pizza then
     //    moves that copied vector into its own storage.
     Pizza build() const {
@@ -228,20 +228,16 @@ public:
 // -----------------------------------------------------------------------------
 
 // Encapsulates predefined construction sequences.
-//
-// The Director knows the recipe -- which size, crust, and toppings to request.
-// PizzaBuilder remains responsible for applying those individual construction
-// steps and producing the final Pizza.
-//
-// The Director borrows an existing PizzaBuilder by reference. It neither owns
-// the builder nor stores it.
-//
-// Each recipe resets the builder first so previous customizations or toppings
-// cannot leak into a predefined pizza. This makes each recipe deterministic.
-//
-// Director methods are const because the Director itself is stateless; only
-// the supplied builder is modified.
-
+// Notes:
+//  - The Director knows the recipe -- which size, crust, and toppings to request.
+//  - PizzaBuilder remains responsible for applying those individual construction
+//    steps and producing the final Pizza.
+//  - The Director borrows an existing PizzaBuilder by reference. It neither owns
+//    the builder nor stores it.
+//  - Each recipe resets the builder first so previous customizations or toppings
+//    cannot leak into a predefined pizza. This makes each recipe deterministic.
+//  - Director methods are const because the Director itself is stateless; only
+//    the supplied builder is modified.
 class Director {
 public:
     Pizza make_margherita(PizzaBuilder& pizza_builder) const {
@@ -265,16 +261,34 @@ public:
 };
 
 
+// -----------------------------------------------------------------------------
+// Demo / Entry Point
+// -----------------------------------------------------------------------------
+
+// Demonstrates both common ways to use the Builder pattern:
+//  1. The Director uses the builder to produce predefined recipes.
+//  2. A customer uses PizzaBuilder directly for a custom pizza.
+// Notes:
+//  - The same builder is reused throughout the demo. 
+//  - Director recipes reset the builder before construction, while the custom 
+//    example resets it explicitly.
+//  - The custom pizza deliberately configures only its size. Crust therefore uses
+//    the builder default and no toppings are added, demonstrating that optional
+//    construction steps can be skipped while still producing a valid Pizza.
 int main() {
     PizzaBuilder pizza_builder;
     Director director;
+    
     auto margherita = director.make_margherita(pizza_builder);
     margherita.display();
+    
     auto pepperoni = director.make_pepperoni(pizza_builder);
     pepperoni.display();
+    
     pizza_builder.reset();
     pizza_builder.set_size(Size::SMALL);
     auto custom_pizza = pizza_builder.build();
     custom_pizza.display();
+    
     return 0;
 }
