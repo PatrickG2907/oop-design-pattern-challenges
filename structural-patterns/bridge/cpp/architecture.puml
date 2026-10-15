@@ -1,0 +1,55 @@
+@startuml
+title Design Pattern 7 - Bridge Drawing Application
+
+abstract class Renderer {
+    + ~Renderer()
+    + render(shape_name : std::string_view) const : void
+}
+
+class VectorRenderer {
+    + render(shape_name : std::string_view) const : void
+}
+
+class RasterRenderer {
+    + render(shape_name : std::string_view) const : void
+}
+
+class AsciiRenderer {
+    + render(shape_name : std::string_view) const : void
+}
+
+
+abstract class Shape {
+    # renderer_ : Renderer&
+    + Shape(renderer : Renderer&)
+    + ~Shape()
+    + draw() const : void
+}
+
+class Circle {
+    + Circle(renderer : Renderer&)
+    + draw() const : void
+}
+
+class Square {
+    + Square(renderer : Renderer&)
+    + draw() const : void
+}
+
+class Triangle {
+    + Triangle(renderer : Renderer&)
+    + draw() const : void
+}
+
+
+Renderer <|-- VectorRenderer
+Renderer <|-- RasterRenderer
+Renderer <|-- AsciiRenderer
+
+Shape <|-- Circle
+Shape <|-- Square
+Shape <|-- Triangle
+
+Shape --> Renderer : renderer_ / bridge
+
+@enduml
