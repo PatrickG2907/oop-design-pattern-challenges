@@ -1,33 +1,32 @@
 @startuml
-title Design Pattern 5 - Prototype Game Character System
+title Prototype Pattern: Game Character System
 
-class Character {
+class Character <<Prototype>> {
+    - {static} minimum_health_ : int = 0
+    - {static} maximum_health_ : int = 100
+    - {static} minimum_attack_power_ : int = 0
+    - {static} maximum_attack_power_ : int = 1000
+
     - name_ : std::string
     - health_ : int
     - attack_power_ : int
     - skills_ : std::vector<std::string>
 
-    + Character(
-        name : std::string,
-        health : int,
-        attack_power : int,
-        skills : std::vector<std::string>
-      )
+    - {static} validate_name(name : std::string_view) : void
+    - {static} validate_health(health : int) : void
+    - {static} validate_attack_power(attack_power : int) : void
+    - {static} validate_skill(skill : std::string_view) : void
+    - {static} validate_skills(skills : const std::vector<std::string>&) : void
 
-    + clone() const : Character
+    + Character(name : std::string, health : int, attack_power : int, skills : std::vector<std::string>)
 
     + set_name(name : std::string) : void
     + set_health(health : int) : void
     + set_attack_power(attack_power : int) : void
     + add_skill(skill : std::string) : void
 
+    + clone() const : Character
     + display() const : void
 }
-
-class "client_logic()" as ClientLogic {
-    + client_logic() : void
-}
-
-ClientLogic ..> Character : clones and modifies
 
 @enduml
