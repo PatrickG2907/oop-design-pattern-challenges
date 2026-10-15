@@ -1,0 +1,35 @@
+@startuml
+title Design Pattern 6 - Adapter Payment Gateway Integration
+
+interface PaymentProcessor {
+    + ~PaymentProcessor()
+    + pay(amount_cents : std::int64_t) : bool
+}
+
+class NewPaymentGateway {
+    + make_payment(total_cents : std::int64_t) const : PaymentResult
+}
+
+class PaymentGatewayAdapter {
+    - gateway_ : NewPaymentGateway
+    - {static} normalize_result(result : const PaymentResult&) : bool
+    + PaymentGatewayAdapter(gateway : NewPaymentGateway)
+    + pay(amount_cents : std::int64_t) : bool
+}
+
+class "client_logic()" as ClientLogic {
+    + client_logic(processor : PaymentProcessor&, amount_cents : std::int64_t) : void
+}
+
+PaymentProcessor <|.. PaymentGatewayAdapter
+
+PaymentGatewayAdapter *-- NewPaymentGateway
+
+ClientLogic ..> PaymentProcessor
+
+note right of NewPaymentGateway
+PaymentResult =
+std::variant<bool, std::string>
+end note
+
+@enduml
