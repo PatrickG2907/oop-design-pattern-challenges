@@ -1,5 +1,5 @@
 @startuml
-title Design Pattern 6 - Adapter Payment Gateway Integration
+title Adapter Pattern: Payment Gateway Integration
 
 interface PaymentProcessor {
     + ~PaymentProcessor()
