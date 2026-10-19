@@ -1,50 +1,48 @@
 @startuml
 title Design Pattern 7 - Bridge Drawing Application
 
-abstract class Renderer {
+interface Renderer <<Implementor>> {
     + ~Renderer()
     + render(shape_name : std::string_view) const : void
 }
 
-class VectorRenderer {
+class VectorRenderer <<Concrete Implementor>> {
     + render(shape_name : std::string_view) const : void
 }
 
-class RasterRenderer {
+class RasterRenderer <<Concrete Implementor>> {
     + render(shape_name : std::string_view) const : void
 }
 
-class AsciiRenderer {
+class AsciiRenderer <<Concrete Implementor>> {
     + render(shape_name : std::string_view) const : void
 }
 
-
-abstract class Shape {
+abstract class Shape <<Abstraction>> {
     # renderer_ : Renderer&
     + Shape(renderer : Renderer&)
     + ~Shape()
     + draw() const : void
 }
 
-class Circle {
+class Circle <<Refined Abstraction>> {
     + Circle(renderer : Renderer&)
     + draw() const : void
 }
 
-class Square {
+class Square <<Refined Abstraction>> {
     + Square(renderer : Renderer&)
     + draw() const : void
 }
 
-class Triangle {
+class Triangle <<Refined Abstraction>> {
     + Triangle(renderer : Renderer&)
     + draw() const : void
 }
 
-
-Renderer <|-- VectorRenderer
-Renderer <|-- RasterRenderer
-Renderer <|-- AsciiRenderer
+Renderer <|.. VectorRenderer
+Renderer <|.. RasterRenderer
+Renderer <|.. AsciiRenderer
 
 Shape <|-- Circle
 Shape <|-- Square
