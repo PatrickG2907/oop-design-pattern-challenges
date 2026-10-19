@@ -1,5 +1,5 @@
 @startuml
-title Design Pattern 7 - Bridge Drawing Application
+title Bridge Pattern: Drawing Application
 
 interface Renderer <<Implementor>> {
     + ~Renderer()
