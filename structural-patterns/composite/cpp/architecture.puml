@@ -1,0 +1,39 @@
+@startuml
+title Design Pattern 8 - Composite File System
+
+top to bottom direction
+skinparam linetype ortho
+
+interface FileSystemComponent <<Component>> {
+    + ~FileSystemComponent()
+    + display(depth : std::size_t = 0) const : void
+    + size() const : std::size_t
+}
+
+class File <<Leaf>> {
+    - name_ : std::string
+    - size_ : std::size_t
+    - {static} validate_name(name : std::string_view) : void
+    + File(name : std::string, size : std::size_t)
+    + display(depth : std::size_t = 0) const : void
+    + size() const : std::size_t
+}
+
+class Folder <<Composite>> {
+    - name_ : std::string
+    - children_ : std::vector<std::unique_ptr<FileSystemComponent>>
+    - {static} validate_name(name : std::string_view) : void
+    + Folder(name : std::string)
+    + add(component : std::unique_ptr<FileSystemComponent>) : void
+    + display(depth : std::size_t = 0) const : void
+    + size() const : std::size_t
+}
+
+File -up-|> FileSystemComponent
+Folder -up-|> FileSystemComponent
+
+File -[hidden]right- Folder
+
+Folder "1" *-right- "0..*" FileSystemComponent : children_
+
+@enduml
