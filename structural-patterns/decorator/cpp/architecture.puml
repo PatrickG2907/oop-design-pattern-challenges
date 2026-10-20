@@ -1,0 +1,61 @@
+@startuml
+title Decorator Pattern: Notification System
+
+top to bottom direction
+
+skinparam linetype ortho
+skinparam nodesep 50
+skinparam ranksep 45
+
+interface Notification <<Component>> {
+    + ~Notification()
+    + send(message : std::string_view) const : void
+    + description() const : std::string
+}
+
+class EmailNotification <<Concrete Component>> {
+    + send(message : std::string_view) const : void
+    + description() const : std::string
+}
+
+abstract class NotificationDecorator <<Decorator>> {
+    - wrapped_ : std::unique_ptr<Notification>
+    - {static} validate_wrapped(wrapped : const std::unique_ptr<Notification>&) : void
+    # NotificationDecorator(wrapped : std::unique_ptr<Notification>)
+    + send(message : std::string_view) const : void
+    + description() const : std::string
+}
+
+class SMSDecorator <<Concrete Decorator>> {
+    + SMSDecorator(wrapped : std::unique_ptr<Notification>)
+    + send(message : std::string_view) const : void
+    + description() const : std::string
+}
+
+class PushDecorator <<Concrete Decorator>> {
+    + PushDecorator(wrapped : std::unique_ptr<Notification>)
+    + send(message : std::string_view) const : void
+    + description() const : std::string
+}
+
+class LoggingDecorator <<Concrete Decorator>> {
+    + LoggingDecorator(wrapped : std::unique_ptr<Notification>)
+    + send(message : std::string_view) const : void
+}
+
+' Main inheritance structure
+EmailNotification -up-|> Notification
+NotificationDecorator -up-|> Notification
+
+SMSDecorator -up-|> NotificationDecorator
+PushDecorator -up-|> NotificationDecorator
+LoggingDecorator -up-|> NotificationDecorator
+
+' Keep concrete decorators aligned horizontally
+SMSDecorator -[hidden]right- PushDecorator
+PushDecorator -[hidden]right- LoggingDecorator
+
+' Keep Email and the Decorator base on the same level
+EmailNotification -[hidden]right- NotificationDecorator
+
+@enduml
