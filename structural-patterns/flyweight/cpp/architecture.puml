@@ -1,0 +1,73 @@
+
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+title Flyweight Pattern - Text Editor
+
+interface Flyweight <<Flyweight>> {
+    + render(value : char, highlighted : bool) : void
+}
+
+class CharacterStyle <<ConcreteFlyweight>> {
+    - bold : bool
+    - italic : bool
+    - color : string
+    --
+    + render(value : char, highlighted : bool) : void
+}
+
+class StyleFactory <<FlyweightFactory>> {
+    - styles : Map<StyleKey, shared_ptr<const Flyweight>>
+    --
+    + getStyle(bold : bool, italic : bool, color : string) : shared_ptr<const Flyweight>
+}
+
+class Character <<Context>> {
+    - value : char
+    - style : shared_ptr<const Flyweight>
+    --
+    + display(highlighted : bool) : void
+}
+
+class TextEditor <<Client>> {
+    - characters : vector<Character>
+    - highlightedPositions : set<size_t>
+    - styleFactory : StyleFactory
+    --
+    + addCharacter(value : char, bold : bool, italic : bool, color : string) : void
+    + highlight(position : size_t) : void
+    + removeHighlight(position : size_t) : void
+    + display() : void
+}
+
+Flyweight <|.. CharacterStyle
+
+StyleFactory o-- "0..*" Flyweight : caches
+StyleFactory ..> CharacterStyle : creates
+
+Character --> Flyweight : shares
+
+TextEditor *-- StyleFactory
+TextEditor *-- "0..*" Character
+
+note right of CharacterStyle
+    Intrinsic state:
+    - bold
+    - italic
+    - color
+
+    Immutable after creation
+end note
+
+note right of Flyweight
+    Receives extrinsic state:
+    - character value
+    - highlighted status
+end note
+
+note bottom of TextEditor
+    Stores dynamically highlighted
+    character positions.
+end note
+
+@enduml
