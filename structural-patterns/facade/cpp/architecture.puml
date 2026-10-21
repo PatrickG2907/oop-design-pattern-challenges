@@ -1,0 +1,51 @@
+@startuml
+title Facade Pattern - Smart Home
+
+class SmartHome <<Facade>> {
+  - lights_ : Lights
+  - ac_ : AC
+  - music_ : Music
+  --
+  + start_party(temperature : int, song : string_view) : void
+  + end_party(temperature : int) : void
+  + vacation_mode(settings : VacationSettings) : void
+}
+
+class Lights <<Subsystem>> {
+  + on() : void
+  + off() : void
+  + schedule(on_time : string_view, off_time : string_view) : void
+}
+
+class AC <<Subsystem>> {
+  + on() : void
+  + off() : void
+  + set_temperature(temperature : int) : void
+  + schedule(temperature : int, start_time : string_view, end_time : string_view) : void
+}
+
+class Music <<Subsystem>> {
+  + on() : void
+  + off() : void
+  + play_song(song : string_view) : void
+}
+
+class VacationSettings <<Configuration>> {
+  + lights_on_time : string_view
+  + lights_off_time : string_view
+  + ac_temperature : int
+  + ac_start_time : string_view
+  + ac_end_time : string_view
+}
+
+class Client <<main()>>
+
+SmartHome *-- Lights : owns
+SmartHome *-- AC : owns
+SmartHome *-- Music : owns
+
+SmartHome ..> VacationSettings : uses
+Client --> SmartHome : uses
+Client ..> VacationSettings : creates
+
+@enduml
