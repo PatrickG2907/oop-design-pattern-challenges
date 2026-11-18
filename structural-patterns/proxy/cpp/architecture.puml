@@ -1,0 +1,147 @@
+
+@startuml
+
+' ============================================================================
+' PROXY DESIGN PATTERN — DIGITAL LIBRARY (C++17)
+' ============================================================================
+
+title Proxy Design Pattern — Digital Library (C++17)
+
+left to right direction
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+
+
+' ============================================================================
+' 1. SUBJECT INTERFACE
+' ============================================================================
+
+abstract class IBook <<Subject>> {
+    + {abstract} getTitle() : std::string_view
+    + {abstract} getAuthor() : std::string_view
+    + {abstract} getContent() : std::string_view
+    + ~IBook()
+}
+
+
+' ============================================================================
+' 2. REAL SUBJECT
+' ============================================================================
+
+class Book <<RealSubject>> {
+    - title_ : std::string
+    - author_ : std::string
+    - content_ : std::string
+    --
+    + Book(title : std::string, author : std::string)
+    + getTitle() : std::string_view
+    + getAuthor() : std::string_view
+    + getContent() : std::string_view
+}
+
+
+' ============================================================================
+' 3. PROXY
+' ============================================================================
+
+class BookProxy <<Proxy>> {
+    - title_ : std::string
+    - author_ : std::string
+    - role_ : UserRole
+    - realBook_ : std::unique_ptr<Book>
+    --
+    - authorizeRead() : void
+    - ensureLoaded() : void
+    --
+    + BookProxy(title : std::string, author : std::string, role : UserRole)
+    + getTitle() : std::string_view
+    + getAuthor() : std::string_view
+    + getContent() : std::string_view
+}
+
+
+' ============================================================================
+' 4. ACCESS-CONTROL CONTEXT
+' ============================================================================
+
+enum UserRole {
+    Guest
+    Member
+}
+
+
+' ============================================================================
+' 5. CLIENT
+' ============================================================================
+
+class "main()" as Client <<Client>>
+
+
+' ============================================================================
+' 6. RELATIONSHIPS
+' ============================================================================
+
+' Both implementations share the same Subject interface.
+IBook <|-- Book
+IBook <|-- BookProxy
+
+' The Proxy exclusively owns the RealSubject.
+' Multiplicity 0..1 represents lazy initialization.
+BookProxy "1" *-- "0..1" Book : owns / creates lazily
+
+' The Proxy stores a user role for authorization.
+BookProxy --> UserRole : checks role
+
+' The Client constructs concrete proxies.
+Client ..> BookProxy : creates
+
+' The Client uses the shared Subject interface.
+' Polymorphic access is explained in the Client note.
+Client ..> IBook
+
+
+' ============================================================================
+' 7. DESIGN NOTES
+' ============================================================================
+
+note bottom of BookProxy
+  Virtual Proxy:
+  - Defers construction of Book.
+  - Reuses the existing instance.
+  - Provides metadata without loading.
+
+  Protection Proxy:
+  - Checks UserRole before loading.
+  - Rejects unauthorized requests.
+
+  Content access:
+  1. authorizeRead()
+  2. ensureLoaded()
+  3. realBook_->getContent()
+end note
+
+note bottom of Book
+  RealSubject:
+  - Stores title, author, and content.
+  - Initializes content during construction.
+  - Returns non-owning string_view values.
+
+  Content loading is simulated using
+  a fixed description of "1984".
+end note
+
+note bottom of Client
+  Demonstrates:
+  - Member access
+  - Guest access
+  - Lazy initialization
+  - Object reuse
+  - Polymorphic access via IBook&
+
+  main() is a function, represented
+  as a class-shaped client for UML.
+end note
+
+@enduml
