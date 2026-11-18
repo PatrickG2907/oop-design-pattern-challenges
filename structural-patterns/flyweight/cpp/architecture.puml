@@ -1,73 +1,165 @@
 
 @startuml
+title Flyweight Pattern - Text Editor
+
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
-title Flyweight Pattern - Text Editor
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+top to bottom direction
+
+' ==========================================================
+' Abstract Flyweight
+' ==========================================================
 
 interface Flyweight <<Flyweight>> {
     + render(value : char, highlighted : bool) : void
 }
 
-class CharacterStyle <<ConcreteFlyweight>> {
-    - bold : bool
-    - italic : bool
-    - color : string
+' ==========================================================
+' Concrete Flyweight
+' ==========================================================
+
+class CharacterStyle <<Concrete Flyweight>> {
+    - bold_ : const bool
+    - italic_ : const bool
+    - color_ : const string
     --
+    - {static} validate_color(color : string_view) : void
+    + CharacterStyle(bold : bool, italic : bool, color : string)
     + render(value : char, highlighted : bool) : void
 }
 
-class StyleFactory <<FlyweightFactory>> {
-    - styles : Map<StyleKey, shared_ptr<const Flyweight>>
+' ==========================================================
+' Flyweight Key
+' ==========================================================
+
+class StyleKey <<Value Object>> {
+    + bold : bool
+    + italic : bool
+    + color : string
     --
-    + getStyle(bold : bool, italic : bool, color : string) : shared_ptr<const Flyweight>
+    + operator<=>(other : const StyleKey&) : auto
 }
 
-class Character <<Context>> {
-    - value : char
-    - style : shared_ptr<const Flyweight>
+' ==========================================================
+' Flyweight Factory
+' ==========================================================
+
+class StyleFactory <<Flyweight Factory>> {
+    - styles_ : map<StyleKey, unique_ptr<const Flyweight>>
     --
+    + getStyle(bold : bool, italic : bool, color : string_view) : const Flyweight*
+    + styleCount() : size_t
+}
+
+' ==========================================================
+' Context
+' ==========================================================
+
+class Character <<Context>> {
+    - value_ : char
+    - style_ : const Flyweight*
+    --
+    - {static} validate_style(style : const Flyweight*) : void
+    + Character(value : char, style : const Flyweight*)
     + display(highlighted : bool) : void
 }
 
-class TextEditor <<Client>> {
-    - characters : vector<Character>
-    - highlightedPositions : set<size_t>
-    - styleFactory : StyleFactory
+' ==========================================================
+' Client / Text Editor
+' ==========================================================
+
+class TextEditor <<Client / Coordinator>> {
+    - styleFactory_ : StyleFactory
+    - characters_ : vector<Character>
+    - highlightedPositions_ : set<size_t>
     --
-    + addCharacter(value : char, bold : bool, italic : bool, color : string) : void
+    + TextEditor()
+    + addCharacter(value : char, bold : bool, italic : bool, color : string_view) : void
     + highlight(position : size_t) : void
     + removeHighlight(position : size_t) : void
     + display() : void
+    + styleCount() : size_t
 }
 
+' ==========================================================
+' Relationships
+' ==========================================================
+
+' Concrete Flyweight implements the abstract interface.
 Flyweight <|.. CharacterStyle
 
-StyleFactory o-- "0..*" Flyweight : caches
+' Factory exclusively owns the cached Flyweights.
+StyleFactory "1" *-- "0..*" Flyweight : owns / caches
+
+' Factory uses keys to identify unique styles.
+StyleFactory ..> StyleKey : cache key
+
+' Factory constructs the concrete implementation.
 StyleFactory ..> CharacterStyle : creates
 
-Character --> Flyweight : shares
+' Many characters may reference the same Flyweight.
+Character "0..*" --> "1" Flyweight : non-owning reference
 
-TextEditor *-- StyleFactory
-TextEditor *-- "0..*" Character
+' TextEditor owns the factory and character collection.
+TextEditor "1" *-- "1" StyleFactory : owns
+TextEditor "1" *-- "0..*" Character : contains
+
+' ==========================================================
+' Design Notes
+' ==========================================================
 
 note right of CharacterStyle
-    Intrinsic state:
+    INTRINSIC STATE
+
     - bold
     - italic
     - color
 
-    Immutable after creation
+    Shared and immutable.
+
+    Identical formatting can
+    reuse one Flyweight instance.
 end note
 
-note right of Flyweight
-    Receives extrinsic state:
-    - character value
-    - highlighted status
+note right of Character
+    CONTEXT
+
+    Stores the character value
+    and a non-owning pointer
+    to its shared Flyweight.
+
+    Delegates rendering through
+    the abstract interface.
+end note
+
+note right of StyleFactory
+    OWNERSHIP
+
+    Stores unique_ptr<const Flyweight>.
+
+    Identical StyleKey values
+    return the same instance.
+
+    getStyle() returns a
+    non-owning const Flyweight*.
 end note
 
 note bottom of TextEditor
-    Stores dynamically highlighted
-    character positions.
+    DYNAMIC HIGHLIGHTING
+
+    Highlighted positions are
+    stored separately in a set.
+
+    Highlighting is supplied
+    as extrinsic state at runtime.
+
+    No new Flyweights are created
+    when highlighting changes.
+
+    Copying and moving are disabled.
 end note
 
 @enduml
