@@ -1,6 +1,6 @@
 
 @startuml
-title Flyweight Pattern - Text Editor
+title Flyweight Pattern: Text Editor
 
 skinparam classAttributeIconSize 0
 skinparam linetype ortho
