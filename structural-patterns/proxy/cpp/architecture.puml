@@ -1,11 +1,6 @@
-
 @startuml
 
-' ============================================================================
-' PROXY DESIGN PATTERN — DIGITAL LIBRARY (C++17)
-' ============================================================================
-
-title Proxy Design Pattern — Digital Library (C++17)
+title Proxy Pattern: Digital Library
 
 left to right direction
 
