@@ -1,0 +1,124 @@
+
+@startuml
+' ============================================================================
+' COMMAND PATTERN — ROBOT FACTORY (C++17)
+' DIAGRAM 1 OF 2: CLASS ARCHITECTURE
+' Short relationship labels; detailed execution rules are in Diagram 2.
+' ============================================================================
+
+title Command Pattern: Robot Factory
+
+left to right direction
+skinparam shadowing false
+skinparam linetype polyline
+skinparam classAttributeIconSize 0
+skinparam defaultFontSize 16
+skinparam classFontSize 16
+skinparam dpi 180
+skinparam nodesep 60
+skinparam ranksep 70
+hide empty members
+
+' 1. Client
+class "main()" as Client <<Client>>
+
+' 2. Invoker
+class RobotController <<Invoker>> {
+    - pending_ : std::queue<std::unique_ptr<ICommand>>
+    - retryLater_ : std::queue<std::unique_ptr<ICommand>>
+    --
+    + enqueue(command : std::unique_ptr<ICommand>) : void
+    + runPending() : void
+    + retryDeferred() : void
+}
+
+' 3. Command interface
+abstract class ICommand <<Command>> {
+    + ~ICommand()
+    + {abstract} execute() : bool
+    + {abstract} undo() : void
+    + safetyCheck() : bool
+}
+
+' 4. Concrete commands
+class PickItem <<ConcreteCommand>> {
+    - robot_ : Robot&
+    - picked_ : bool = false
+    --
+    + PickItem(robot : Robot&)
+    + execute() : bool
+    + undo() : void
+}
+
+class PlaceItem <<ConcreteCommand>> {
+    - robot_ : Robot&
+    - placed_ : bool = false
+    --
+    + PlaceItem(robot : Robot&)
+    + execute() : bool
+    + undo() : void
+}
+
+class WeldItem <<ConcreteCommand>> {
+    - robot_ : Robot&
+    - welded_ : bool = false
+    --
+    + WeldItem(robot : Robot&)
+    + execute() : bool
+    + undo() : void
+    + safetyCheck() : bool
+}
+
+' 5. Receiver
+class Robot <<Receiver>> {
+    - holdingItem_ : bool = false
+    - welded_ : bool = false
+    - weldingSafe_ : bool = false
+    --
+    + pickItem() : bool
+    + undoPick() : void
+    + placeItem() : bool
+    + undoPlace() : void
+    + isWeldingSafe() const noexcept : bool
+    + setWeldingSafe(safe : bool) noexcept : void
+    + weldItem() : bool
+    + undoWeld() : void
+}
+
+' ============================================================
+' 6. RELATIONSHIPS
+' ============================================================
+
+' Client dependencies
+Client ..> RobotController : enqueue / run / retry
+Client ..> Robot : construct / set safety
+
+' Controller owns command objects
+RobotController *--> "0..*" ICommand : owns queued commands
+
+' Inheritance
+ICommand <|-- PickItem
+ICommand <|-- PlaceItem
+ICommand <|-- WeldItem
+
+' Non-owning receiver references
+PickItem --> Robot : robot_
+PlaceItem --> Robot : robot_
+WeldItem --> Robot : robot_
+
+' ============================================================
+' 7. LEGEND
+' ============================================================
+
+legend bottom
+  **Relationships**
+  Hollow triangle = inheritance from ICommand
+  Filled diamond = controller owns queued commands
+  Solid arrow = non-owning Robot reference
+  Dashed arrow = client dependency
+
+  **Note:** pending_ and retryLater_ contain distinct unique_ptr owners.
+  A command moves between queues; it is never owned by both.
+endlegend
+
+@enduml
