@@ -1,0 +1,127 @@
+@startuml
+title Chain of Responsibility — Customer Support System
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+left to right direction
+
+' ============================================================
+' 1. REQUEST TYPES
+' ============================================================
+
+enum Severity {
+    Low
+    Medium
+    High
+}
+
+class Ticket <<Request>> {
+    + severity : Severity
+    + description : std::string
+}
+
+' ============================================================
+' 2. ABSTRACT HANDLER
+' ============================================================
+
+abstract class SupportHandler <<Handler>> {
+    - next_ : SupportHandler*
+    # forward(ticket : const Ticket&) : void
+    + setNext(next : SupportHandler*) : void
+    + {abstract} handle(ticket : const Ticket&) : void
+    + ~SupportHandler()
+}
+
+' ============================================================
+' 3. CONCRETE HANDLERS
+' ============================================================
+
+class Level1Handler <<ConcreteHandler>> {
+    + handle(ticket : const Ticket&) : void
+}
+
+class Level2Handler <<ConcreteHandler>> {
+    + handle(ticket : const Ticket&) : void
+}
+
+class Level3Handler <<ConcreteHandler>> {
+    + handle(ticket : const Ticket&) : void
+}
+
+' ============================================================
+' 4. ENTRY-POINT ROUTER
+' ============================================================
+
+class TicketRouter <<Router>> {
+    - level1_ : SupportHandler&
+    - level2_ : SupportHandler&
+    - level3_ : SupportHandler&
+    + TicketRouter(level1 : SupportHandler&, level2 : SupportHandler&, level3 : SupportHandler&)
+    + route(ticket : const Ticket&) : void
+}
+
+' ============================================================
+' 5. INHERITANCE
+' ============================================================
+
+SupportHandler <|-- Level1Handler
+SupportHandler <|-- Level2Handler
+SupportHandler <|-- Level3Handler
+
+' ============================================================
+' 6. CHAIN AND REFERENCE RELATIONSHIPS
+' ============================================================
+
+' Non-owning successor pointer.
+SupportHandler --> "0..1" SupportHandler : next_ (non-owning)
+
+' Actual successor configuration in main().
+Level1Handler ..> Level2Handler : setNext(&level2)
+Level2Handler ..> Level3Handler : setNext(&level3)
+
+' The router holds three non-owning handler references.
+TicketRouter --> "3" SupportHandler : level1_, level2_, level3_\n(non-owning references)
+
+' Request dependencies.
+SupportHandler ..> Ticket : handle / forward
+TicketRouter ..> Ticket : route
+Ticket ..> Severity : severity
+
+' ============================================================
+' 7. HANDLER RESPONSIBILITIES
+' ============================================================
+
+note bottom of Level1Handler
+  Handles Low.
+  Forwards Medium and High.
+end note
+
+note bottom of Level2Handler
+  Handles Low and Medium.
+  Forwards High.
+end note
+
+note bottom of Level3Handler
+  Handles all severity levels.
+  Last handler in the chain.
+end note
+
+' ============================================================
+' 8. ROUTING RULES AND OWNERSHIP
+' ============================================================
+
+note right of TicketRouter
+  Initial entry-point priority:
+  1. "urgent" -> Level 3
+  2. "vip"    -> Level 2
+  3. otherwise -> Level 1
+
+  Substring matching is case-sensitive.
+end note
+
+note top of SupportHandler
+  The client (main) owns handler objects.
+  next_ does not manage their lifetimes.
+end note
+
+@enduml
