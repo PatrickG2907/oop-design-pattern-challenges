@@ -1,5 +1,5 @@
 @startuml
-title Design Pattern 4 - Builder Pizza Ordering System
+title Builder Pattern: Pizza Ordering System
 
 enum Size {
     SMALL
