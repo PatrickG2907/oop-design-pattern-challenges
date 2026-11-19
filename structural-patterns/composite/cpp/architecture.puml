@@ -1,5 +1,5 @@
 @startuml
-title Design Pattern 8 - Composite File System
+title Composite Pattern: File System
 
 top to bottom direction
 skinparam linetype ortho
