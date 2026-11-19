@@ -1,5 +1,5 @@
 @startuml
-title Chain of Responsibility — Customer Support System
+title Chain of Responsibility Pattern: Customer Support System
 
 skinparam classAttributeIconSize 0
 skinparam shadowing false
