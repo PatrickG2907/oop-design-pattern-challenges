@@ -1,5 +1,5 @@
 @startuml
-title Facade Pattern - Smart Home
+title Facade Pattern: Smart Home
 
 class SmartHome <<Facade>> {
   - lights_ : Lights
