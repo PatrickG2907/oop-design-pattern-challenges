@@ -1,9 +1,8 @@
-
 @startuml
 
 allowmixing
 
-title Iterator Pattern - Music Playlist (C++17)
+title Iterator Pattern: Music Playlist
 
 top to bottom direction
 
