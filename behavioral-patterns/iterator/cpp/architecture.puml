@@ -1,0 +1,156 @@
+
+@startuml
+
+allowmixing
+
+title Iterator Pattern - Music Playlist (C++17)
+
+top to bottom direction
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+skinparam roundCorner 8
+hide empty members
+
+' ==========================================================
+' 1. DATA MODEL AND COLLECTION
+' ==========================================================
+
+class Song <<struct>> {
+    + title : std::string
+    + isExplicit : bool
+}
+
+class Playlist {
+    - songs_ : std::vector<Song>
+    --
+    + addSong(song : Song) : void
+    + size() : std::size_t
+    + getSong(index : std::size_t) : const Song&
+}
+
+Playlist "1" *-- "0..*" Song : owns
+
+' ==========================================================
+' 2. ITERATOR INTERFACE
+' ==========================================================
+
+interface IPlaylistIterator {
+    + hasNext() : bool
+    + next() : const Song&
+}
+
+' ==========================================================
+' 3. SHARED INDEX-BASED ITERATOR
+' ==========================================================
+
+class IndexedPlaylistIterator {
+    - playlist_ : const Playlist&
+    - cursor_ : std::size_t
+    # order_ : std::vector<std::size_t>
+    --
+    # IndexedPlaylistIterator(playlist, order)
+    + hasNext() : bool
+    + next() : const Song&
+}
+
+' ==========================================================
+' 4. NORMAL ITERATOR
+' ==========================================================
+
+class NormalIterator {
+    + NormalIterator(playlist, skipExplicit)
+}
+
+' ==========================================================
+' 5. SHUFFLE ITERATOR
+' ==========================================================
+
+class ShuffleIterator {
+    + ShuffleIterator(playlist, skipExplicit, seed)
+}
+
+' ==========================================================
+' 6. MEMORY-EFFICIENT REPEAT ITERATOR
+' ==========================================================
+
+class RepeatIterator {
+    - playlist_ : const Playlist&
+    - order_ : std::vector<std::size_t>
+    - cursor_ : std::size_t
+    - completedPasses_ : std::size_t
+    - times_ : std::size_t
+    --
+    + RepeatIterator(playlist, first, last, times, skipExplicit)
+    + hasNext() : bool
+    + next() : const Song&
+}
+
+' ==========================================================
+' 7. INHERITANCE RELATIONSHIPS
+' ==========================================================
+
+IPlaylistIterator <|.. IndexedPlaylistIterator
+IPlaylistIterator <|.. RepeatIterator
+
+IndexedPlaylistIterator <|-- NormalIterator
+IndexedPlaylistIterator <|-- ShuffleIterator
+
+' ==========================================================
+' 8. COLLECTION REFERENCES
+' ==========================================================
+
+IndexedPlaylistIterator --> Playlist : reads songs
+RepeatIterator --> Playlist : reads songs
+
+' ==========================================================
+' 9. SHARED FILTERING FUNCTION
+' ==========================================================
+
+rectangle "collectSongIndices()\n<<free function>>" as Filter
+
+NormalIterator ..> Filter : selects indices
+ShuffleIterator ..> Filter : selects indices
+RepeatIterator ..> Filter : selects indices
+
+Filter ..> Playlist : reads songs
+
+' ==========================================================
+' 10. POLYMORPHIC CLIENT
+' ==========================================================
+
+rectangle "printSongs()\n<<free function>>" as Client
+
+Client ..> IPlaylistIterator : traverses via interface
+
+' ==========================================================
+' 11. ARCHITECTURE NOTES
+' ==========================================================
+
+note right of ShuffleIterator
+  Uses std::mt19937 and
+  std::shuffle on indices.
+
+  Original Playlist
+  remains unchanged.
+end note
+
+note right of RepeatIterator
+  Stores eligible indices
+  only once.
+
+  Uses cursor_ and
+  completedPasses_ to repeat.
+
+  Extra memory: O(k)
+end note
+
+note bottom of IPlaylistIterator
+  Common traversal contract.
+
+  hasNext() checks availability.
+  next() returns const Song&.
+end note
+
+@enduml
