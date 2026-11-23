@@ -1,0 +1,68 @@
+@startuml
+title Mediator Pattern: Chat Room
+
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty members
+
+package "Colleagues" {
+    interface IUser {
+        + name() : const std::string& {const}
+        + send(room : IChatRoom&, message : std::string_view) : void {const}
+        + receive(senderName : std::string_view, message : std::string_view) : void {const}
+    }
+
+    class ChatUser {
+        - name_ : std::string
+        + ChatUser(name : std::string)
+        + name() : const std::string& {const}
+        + send(room : IChatRoom&, message : std::string_view) : void {const}
+        + receive(senderName : std::string_view, message : std::string_view) : void {const}
+    }
+}
+
+package "Mediators" {
+    interface IChatRoom {
+        + join(user : IUser&) : void
+        + leave(user : IUser&) : void
+        + sendMessage(sender : const IUser&, message : std::string_view) : void
+    }
+
+    class ChatRoom {
+        - members_ : std::unordered_set<const IUser*>
+        - bannedWords_ : std::unordered_set<std::string>
+        - censor(message : std::string_view) : std::string {const}
+        + join(user : IUser&) : void
+        + leave(user : IUser&) : void
+        + sendMessage(sender : const IUser&, message : std::string_view) : void
+        + addBannedWord(word : std::string) : void
+    }
+}
+
+' Interface implementation
+ChatUser ..|> IUser : implements
+ChatRoom ..|> IChatRoom : implements
+
+' Dependencies and membership
+IUser ..> IChatRoom : send() takes mediator
+IChatRoom ..> IUser : handles users
+ChatRoom --> "0..*" IUser : members_ (non-owning)
+
+note bottom of ChatRoom
+  sendMessage():
+  1. Reject unregistered sender
+  2. Censor banned words once
+  3. Deliver to members except sender
+
+  Censorship is case-sensitive
+  and matches substrings.
+end note
+
+note bottom of ChatUser
+  send() delegates to IChatRoom.
+  receive() prints the message.
+  No direct colleague-to-colleague calls.
+end note
+
+@enduml
