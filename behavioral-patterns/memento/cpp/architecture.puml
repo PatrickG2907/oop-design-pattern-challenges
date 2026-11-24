@@ -1,0 +1,165 @@
+@startuml
+' Final architecture based on memento_drawing_documented.cpp (C++20).
+title Memento Design Pattern - Drawing Application\nClass architecture (C++20)
+
+top to bottom direction
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam linetype polyline
+skinparam defaultFontName DejaVu Sans
+skinparam defaultFontSize 15
+skinparam classFontSize 16
+skinparam classAttributeFontSize 14
+skinparam nodesep 100
+skinparam ranksep 110
+skinparam padding 10
+skinparam dpi 160
+
+' Use SVG export for zooming without clipping or loss of detail.
+' Keep relationship explanations in the legend, not on connector paths.
+' EntryStack, Scope and ShapeIds are diagram-only type abbreviations.
+
+
+class Drawing <<Originator>> {
+    - shapes_ : std::vector<Shape>
+    .. Private helpers ..
+    - findShapeById(id : int) : Shape*
+    - findShapeById(id : int) const : const Shape*
+    - mementoContainsShape(memento : const DrawingMemento&, id : int) const : bool
+    .. Editing ..
+    + addShape(shape : Shape) : void
+    + moveShape(id : int, dx : double, dy : double) : void
+    + resizeShape(id : int, factor : double) : void
+    .. Snapshot and restoration ..
+    + save() const : DrawingMemento
+    + restore(memento : const DrawingMemento&) : void
+    + restoreShape(memento : const DrawingMemento&, id : int) : void
+    + restoreShapes(memento : const DrawingMemento&, shapeIds : const ShapeIds&) : void
+    + restoreLinkedShapes(memento : const DrawingMemento&, id : int) : void
+    .. Read-only operations ..
+    + getLinkedShapeIds(id : int) const : std::vector<int>
+    + getShape(id : int) const : Shape
+    + print() const : void
+}
+
+class DrawingMemento <<Memento>> {
+    - shapes_ : std::vector<Shape>
+    - DrawingMemento(shapes : const std::vector<Shape>&)
+}
+
+class DrawingHistory <<Caretaker>> {
+    - undoStack_ : std::vector<HistoryEntry>
+    - redoStack_ : std::vector<HistoryEntry>
+    .. Shared history algorithm ..
+    - {static} transfer(drawing : Drawing&, source : EntryStack&, destination : EntryStack&, shapeIds : const Scope&) : void
+    .. Public operations ..
+    + save(drawing : const Drawing&) : void
+    + canUndo() const noexcept : bool
+    + canRedo() const noexcept : bool
+    + undo(drawing : Drawing&) : void
+    + undo(drawing : Drawing&, id : int, mode : RestoreMode) : void
+    + redo(drawing : Drawing&) : void
+}
+
+class HistoryEntry <<struct>> {
+    + memento : DrawingMemento
+    + shapeIds : std::optional<std::vector<int>>
+}
+
+enum RestoreMode <<enum class>> {
+    Full
+    Individual
+    Linked
+}
+
+class Shape <<type alias>> {
+    std::variant<Circle, Rectangle>
+}
+
+class Circle <<struct>> {
+    + id : int
+    + x : double
+    + y : double
+    + radius : double
+    + groupId : int
+}
+
+class Rectangle <<struct>> {
+    + id : int
+    + x : double
+    + y : double
+    + width : double
+    + height : double
+    + groupId : int
+}
+
+class "Shape helpers" as Helpers <<free functions>> {
+    + getShapeId(shape : const Shape&) : int
+    + getGroupId(shape : const Shape&) : int
+}
+
+class "Client / tests" as Client <<free functions>> {
+    + makeDrawing() : Drawing
+    + testRestoration(mode : RestoreMode, label : const char*) : void
+    + testMultipleUndoRedo() : void
+    + testFailedLinkedUndo() : void
+    + main() : int
+}
+
+' Relationships: short, unlabelled connectors prevent label collisions.
+' A single composition edge represents both history stacks.
+Client ..> Drawing
+Client ..> DrawingHistory
+Client ..> RestoreMode
+DrawingHistory ..> Drawing
+DrawingHistory ..> RestoreMode
+DrawingHistory *-- "0..*" HistoryEntry
+HistoryEntry *-- "1" DrawingMemento
+Drawing ..> DrawingMemento
+Drawing *-- "0..*" Shape
+DrawingMemento *-- "0..*" Shape
+Shape ..> Circle
+Shape ..> Rectangle
+Drawing ..> Helpers
+Helpers ..> Shape
+
+legend bottom
+  **Relationship key**
+  Filled diamond: composition (owned values).
+  Dashed arrow: dependency (uses a type or its operations).
+  Drawing owns current shapes; DrawingMemento owns saved copies.
+  DrawingHistory owns entries in both undoStack_ and redoStack_.
+  Each HistoryEntry owns one memento and its restoration scope.
+  Drawing creates and restores mementos; it uses the shape helpers.
+  Shape depends on its two variant alternatives; helpers use std::visit.
+  Client calls Drawing and DrawingHistory and selects RestoreMode.
+
+  **Diagram-only type abbreviations**
+  EntryStack = std::vector<HistoryEntry>
+  ShapeIds = std::vector<int>
+  Scope = std::optional<std::vector<int>>
+
+  **Encapsulation and restoration**
+  DrawingMemento stores private snapshots; friend class Drawing
+  grants direct access to the Originator, not the Caretaker.
+  Group 0 means ungrouped; positive IDs identify linked shapes.
+  Collect linked IDs before restoring group membership.
+  Validate every selected ID in both states before modification.
+  Full restoration uses copy-and-swap.
+
+  **Undo / redo consistency**
+  nullopt = full restoration; a vector of IDs = selective restoration.
+  Save a checkpoint before an edit; saving clears redo history.
+  Push the current state to the opposite stack, restore the source
+  snapshot, then consume the source entry. Roll back on failure.
+  Selective undo consumes the latest checkpoint, not an arbitrary
+  earlier per-shape state. Later undo / redo preserve the exact IDs.
+endlegend
+
+' Shape is an alias, not a base class. Helpers and Client are conceptual
+' groupings of free functions, not actual C++ classes.
+' No inheritance: variant alternatives are type dependencies.
+' Group membership is stored by ID; no owning Shape-to-Shape relationship.
+' canUndo() and canRedo() are noexcept in the C++ implementation.
+
+@enduml
